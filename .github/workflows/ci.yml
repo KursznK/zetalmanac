@@ -49,7 +49,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version-file: apps/web/package.json
           cache: npm
           cache-dependency-path: apps/web/package-lock.json
       - name: Install dependencies (persis sesuai package-lock.json)
