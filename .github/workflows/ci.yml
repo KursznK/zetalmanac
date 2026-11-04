@@ -58,3 +58,24 @@ jobs:
         run: npm run lint
       - name: Build
         run: npm run build
+  core:
+    name: Core (Python)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/zetalmanac-core
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - name: Install dependencies (persis sesuai uv.lock)
+        run: uv sync --locked
+      - name: Lint
+        run: uv run ruff check .
+      - name: Format check
+        run: uv run ruff format --check .
+      - name: Tests
+        run: uv run pytest -q
