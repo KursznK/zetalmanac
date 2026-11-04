@@ -42,4 +42,4 @@ mlruns/
 packages/zetalmanac-core/tests/private/
 
 # --- Catatan pribadi ---
-private/
+private/.hypothesis/
