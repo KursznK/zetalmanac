@@ -42,5 +42,6 @@ def convert_date(
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e)) from e
     # Hasil konversi tidak pernah berubah untuk input yang sama, jadi aman disimpan CDN sehari.
-    response.headers["Cache-Control"] = "public, max-age=86400"
+    # max-age: cache browser 1 jam; s-maxage: cache CDN Vercel 1 hari
+    response.headers["Cache-Control"] = "public, max-age=3600, s-maxage=86400"
     return hasil

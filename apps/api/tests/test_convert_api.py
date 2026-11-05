@@ -13,7 +13,7 @@ def test_konversi_gregorian():
     assert body["hijri"]["label"] == "24 Jumadilawal 1448 H"
     assert body["china"]["label"] == "九月廿七"
     assert body["maya"]["long_count"] == "13.0.14.1.7"
-    assert "max-age=86400" in r.headers["cache-control"]
+    assert "s-maxage=86400" in r.headers["cache-control"]
 
 
 def test_parameter_varian():
