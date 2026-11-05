@@ -1,26 +1,68 @@
 @import "tailwindcss";
 
+/* Palet Zetalmanac: kertas, tinta, nila, dan soga. Sama dengan mockup desain. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --bg: #f5f1e8;
+  --surface: #fbf9f4;
+  --chip: #efe9dc;
+  --ink: #1b1f2a;
+  --muted: #575c68;
+  --accent: #94561f;
+  --rule: #cfc6b4;
+  --head-bg: #25305a;
+  --head-ink: #f5f1e8;
+  --btn-bg: #25305a;
+  --btn-ink: #fbf9f4;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: #0e1320;
+    --surface: #151b2b;
+    --chip: #1d2438;
+    --ink: #ece4d2;
+    --muted: #a8a296;
+    --accent: #d9a55b;
+    --rule: #2a3247;
+    --head-bg: #151b2b;
+    --head-ink: #ece4d2;
+    --btn-bg: #d9a55b;
+    --btn-ink: #0e1320;
   }
 }
 
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-chip: var(--chip);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-rule: var(--rule);
+  --color-head-bg: var(--head-bg);
+  --color-head-ink: var(--head-ink);
+  --color-btn-bg: var(--btn-bg);
+  --color-btn-ink: var(--btn-ink);
+
+  --font-sans: var(--font-lm-sans), "CMU Sans Serif", system-ui, sans-serif;
+  --font-serif: var(--font-lm-roman), "CMU Serif", Georgia, serif;
+  --font-display: var(--font-lm-roman17), var(--font-lm-roman), Georgia, serif;
+  --font-caps: var(--font-lm-caps), Georgia, serif;
+  --font-mono: var(--font-lm-mono), ui-monospace, monospace;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* Pilihan yang hanya relevan untuk kalender asal tertentu. Tanpa JavaScript: memakai :has(). */
+.leap-field {
+  display: none;
+}
+form:has(select[name="from"] option[value="china"]:checked) .leap-field {
+  display: flex;
+}
+form:has(select[name="from"] option[value="hijri"]:checked) .sunset-field {
+  display: none;
 }
