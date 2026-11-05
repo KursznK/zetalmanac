@@ -1,8 +1,8 @@
 """Kalender Gregorian (proleptik) <-> RD (Rata Die).
 
 RD 1 = 1 Januari tahun 1 M (Gregorian proleptik).
-Algoritma mengikuti Dershowitz & Reingold (1990), "Calendrical Calculations",
-Software--Practice and Experience 20(9); implementasi ditulis ulang sendiri.
+Algoritma mengikuti Dershowitz & Reingold (1990) dengan koreksi dekomposisi siklus
+dari Reingold, Dershowitz & Clamen (1993); implementasi ditulis ulang sendiri.
 Penomoran tahun astronomis: tahun 0 = 1 SM, tahun -1 = 2 SM.
 """
 
