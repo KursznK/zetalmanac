@@ -120,3 +120,25 @@ def test_convert_dengan_langkah():
     assert set(hasil["steps"]) == {"gregorian", "hijri", "maya"}
     assert "steps" not in convert("gregorian", "2026-11-05")
     assert set(convert("maya", "13.0.14.1.7", steps=True)["steps"]) == {"hijri", "maya"}
+
+
+def test_hari_penting_berikutnya():
+    from zetalmanac_core.convert import upcoming
+
+    acara = upcoming(739925)  # 5 Nov 2026
+    ringkas = [(a["nama"], a["label"], a["hari_lagi"]) for a in acara]
+    assert ringkas == [
+        ("Imlek 2027 · 丁未 (Kambing Api)", "Sabtu, 6 Februari 2027", 93),
+        ("1 Ramadan 1448 H (urfi)", "Senin, 8 Februari 2027", 95),
+        ("1 Syawal 1448 H (urfi)", "Rabu, 10 Maret 2027", 125),
+        ("1 Muharam 1449 H (urfi)", "Minggu, 6 Juni 2027", 213),
+    ]
+
+
+def test_hari_penting_hari_ini_ikut_dihitung():
+    from zetalmanac_core import gregorian
+    from zetalmanac_core.convert import upcoming
+
+    imlek_2026 = gregorian.to_rd(2026, 2, 17)
+    assert upcoming(imlek_2026)[0]["hari_lagi"] == 0
+    assert all("Imlek" not in a["nama"] for a in upcoming(gregorian.to_rd(2100, 6, 1)))
