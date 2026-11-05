@@ -28,10 +28,27 @@ koreksi = 0 (bulan ≤ 2), −1 (bulan > 2, kabisat), −2 (bulan > 2, bukan kab
 | L3 sifat | round-trip; hari berurutan; siklus 400 tahun = 146.097 hari |
 | L4 pembanding | `datetime.date.toordinal()` Python (Gregorian proleptik, tahun 1–9999) |
 
-## Sumber
-- R13: Dershowitz & Reingold (1990), "Calendrical Calculations", *Software—Practice and Experience* 20(9). Implementasi ditulis ulang sendiri.
-- R15: Tøndering, *Calendar FAQ* (aturan kabisat).
+## Sumber dan atribusi
 
-## Catatan untuk peninjau
-- [ ] Rumus di atas cocok dengan paper 1990 (bagian Gregorian)?
-- [ ] Ada kasus tepi lain yang perlu diuji?
+Berdasarkan Dershowitz & Reingold (1990) [R13]. Penentuan tahun dari RD memakai
+dekomposisi siklus 400/100/4/1 tahun yang dikoreksi Reingold, Dershowitz & Clamen
+(1993) [R14]. Bentuk tertutup untuk bulan mengikuti kode CALENDRICA 4.0
+(Reingold & Dershowitz, Apache-2.0) [R17] yang menyertai *Calendrical Calculations*
+ed. ke-4 (Cambridge University Press, 2018) [R1]. Dukungan tahun astronomis nol dan
+negatif diuji terpisah oleh Zetalmanac.
+
+Catatan: R14 hlm. 386 menulis JD 0 = 24 November −4711 (Gregorian); yang benar −4713.
+
+## Riwayat tinjauan
+
+Ditinjau 5 November 2026 oleh Muhamad Zaky Kurniawan, terhadap R13 (1990) dan R14 (1993).
+
+- [x] Penentuan tahun dari RD sama dengan dekomposisi siklus 400/100/4/1 versi koreksi R14,
+      termasuk kasus n100 = 4 atau n1 = 4 (hari ke-366).
+- [x] R13 dan R14 tidak menjamin hasil untuk RD ≤ 0. Zetalmanac memakai pembagian floor
+      (`//`, `divmod`) dan mengujinya di `tests/test_gregorian_nonpositif.py`.
+- [x] 29 Februari 1700, 1800, 1900, 2100 ditolak; 29 Februari 1600, 2000, 0, −400 diterima.
+- [x] Salah cetak R14 hlm. 386 (JD 0 = 24 Nov −4711, seharusnya −4713) dicatat di §5.4 rencana.
+- [ ] Nomor persamaan rumus ⌊(367m − 362)/12⌋ di buku R1 belum dicek (buku tidak tersedia).
+- [x] Kasus tepi tambahan: bulan/tanggal di luar batas ditolak; bolak-balik RD ±10⁹ lolos
+      (`tests/test_gregorian_tepi.py`).
