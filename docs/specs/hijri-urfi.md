@@ -20,7 +20,9 @@
 
 ## Kesetaraan
 - II + civil = ICU `islamic-civil`; II + astronomical = ICU `islamic-tbla`.
-- Diuji terhadap ICU 78 (Node.js Intl) untuk setiap hari 622–2600 M: 0 selisih (5 Nov 2026).
+- Golden file `tests/data/hijri_icu.csv` (54.937 baris: setiap pergantian bulan 1–2000 H
+  untuk kedua epoch, dan setiap hari 1440–1460 H), dibuat oleh `scripts/gen_hijri_icu.mjs`.
+- Skema I, III, IV belum punya pembanding independen; baru diuji lewat sifat strukturalnya.
 
 ## Jangkar uji
 - 5 Nov 2026: 24 Jumadilawal 1448 (II, civil); 25 (II, astronomical); 25 (III/IV, civil).
