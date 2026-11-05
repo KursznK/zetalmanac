@@ -77,6 +77,7 @@ class ChineseCalendar:
         self.new_moons = sorted(new_moon_days)
         self.zhongqi_days = sorted(day for day, _ in zhongqi)
         self.solstices = sorted(day for day, lon in zhongqi if lon == 270)
+        self.zhongqi_by_day = dict(zhongqi)  # hari -> bujur Matahari (derajat)
 
     # ---- pencarian di tabel ----
     def _new_moon_on_or_before(self, day: int) -> int:

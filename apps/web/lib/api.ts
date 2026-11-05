@@ -67,3 +67,43 @@ export async function konversi(opsi: Opsi): Promise<HasilApi> {
   if (!res.ok) return { ok: false, pesan: pesanGalat(body) };
   return { ok: true, data: body as HasilKonversi };
 }
+
+export type HariBulan = {
+  day: number;
+  rd: number;
+  weekday: number;
+  hijri: { year: number; month: number; day: number; month_name: string };
+  china: {
+    year: number;
+    month: number;
+    leap: boolean;
+    day: number;
+    label: string;
+    zhongqi: string | null;
+  } | null;
+};
+
+export type TabelBulan = {
+  year: number;
+  month: number;
+  month_name: string;
+  scheme: string;
+  epoch: string;
+  days: HariBulan[];
+};
+
+export async function bulan(
+  year: number,
+  month: number,
+): Promise<{ ok: true; data: TabelBulan } | { ok: false; pesan: string }> {
+  const params = new URLSearchParams({ year: String(year), month: String(month) });
+  let res: Response;
+  try {
+    res = await fetch(`${API_ORIGIN}/v1/month?${params}`);
+  } catch {
+    return { ok: false, pesan: "API belum bisa dihubungi. Coba lagi sebentar lagi." };
+  }
+  const body: unknown = await res.json().catch(() => null);
+  if (!res.ok) return { ok: false, pesan: pesanGalat(body) };
+  return { ok: true, data: body as TabelBulan };
+}

@@ -82,3 +82,34 @@ def test_label_tahun_sebelum_masehi():
 def test_input_tidak_valid_ditolak(calendar, text):
     with pytest.raises(ValueError):
         convert(calendar, text)
+
+
+def test_kalender_bulanan_november_2026():
+    from zetalmanac_core.convert import month_table
+
+    tabel = month_table(2026, 11)
+    hari = tabel["days"]
+    assert tabel["month_name"] == "November"
+    assert len(hari) == 30
+    assert hari[0]["weekday"] == 0  # 1 Nov 2026 hari Minggu
+    assert hari[4]["hijri"] == {
+        "year": 1448,
+        "month": 5,
+        "day": 24,
+        "month_name": "Jumadilawal",
+    }
+    assert hari[4]["china"]["label"] == "廿七"
+    assert hari[8]["china"]["label"] == "十月"  # 9 Nov: awal bulan 10
+    assert hari[11]["hijri"]["day"] == 1  # 12 Nov: 1 Jumadilakhir
+    assert hari[21]["china"]["zhongqi"] == "小雪"  # 22 Nov
+    assert [h["china"]["zhongqi"] for h in hari].count(None) == 29
+
+
+def test_kalender_bulanan_kabisat_dan_rentang():
+    from zetalmanac_core.convert import month_table
+
+    juli = month_table(2025, 7)["days"]
+    assert juli[24]["china"]["label"] == "闰六月"  # 25 Jul 2025
+    assert month_table(1800, 1)["days"][0]["china"] is None
+    with pytest.raises(ValueError):
+        month_table(2026, 13)
