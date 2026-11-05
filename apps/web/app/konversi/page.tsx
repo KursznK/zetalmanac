@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { KALENDER, konversi, type HasilKonversi, type Kalender } from "@/lib/api";
+import { KALENDER, konversi, type HasilKonversi, type Kalender, type Langkah } from "@/lib/api";
 
 export const metadata: Metadata = { title: "Konversi · Zetalmanac" };
 
@@ -175,6 +175,42 @@ function Hasil({ data }: { data: HasilKonversi }) {
           catatan={`${maya.tzolkin} · ${maya.haab} · ${maya.lord_of_night} · korelasi ${maya.correlation}`}
         />
       </div>
+      {data.steps ? (
+        <details className="border border-rule bg-surface">
+          <summary className="cursor-pointer px-5 py-4 font-display text-2xl">Tunjukkan langkah</summary>
+          <div className="flex flex-wrap border-t border-rule">
+            {data.steps.gregorian ? (
+              <BlokLangkah judul="Gregorian → RD" langkah={data.steps.gregorian} />
+            ) : null}
+            <BlokLangkah judul={`RD → Hijriah urfi (skema ${hijri.scheme})`} langkah={data.steps.hijri} />
+            <BlokLangkah judul={`RD → Maya (korelasi ${maya.correlation})`} langkah={data.steps.maya} />
+          </div>
+          <p className="border-t border-rule px-5 py-3 text-sm text-muted">
+            Rumus mengikuti Reingold &amp; Dershowitz, <em>Calendrical Calculations</em>. Setiap langkah
+            dihitung ulang dan dicocokkan dengan jawaban di atas.
+          </p>
+        </details>
+      ) : null}
     </section>
+  );
+}
+
+function BlokLangkah({ judul, langkah }: { judul: string; langkah: Langkah[] }) {
+  return (
+    <div className="flex min-w-0 flex-[1_1_20rem] flex-col gap-3 p-5">
+      <h3 className="font-serif text-xl">{judul}</h3>
+      <ol className="flex list-decimal flex-col gap-3 pl-6">
+        {langkah.map((l) => (
+          <li key={l.judul}>
+            <span>{l.judul}</span>
+            {l.baris.map((b) => (
+              <code key={b} className="mt-1 block overflow-x-auto font-mono text-[15px] whitespace-pre text-accent">
+                {b}
+              </code>
+            ))}
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }

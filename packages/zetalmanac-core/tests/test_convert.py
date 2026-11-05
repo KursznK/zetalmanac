@@ -113,3 +113,10 @@ def test_kalender_bulanan_kabisat_dan_rentang():
     assert month_table(1800, 1)["days"][0]["china"] is None
     with pytest.raises(ValueError):
         month_table(2026, 13)
+
+
+def test_convert_dengan_langkah():
+    hasil = convert("gregorian", "2026-11-05", steps=True)
+    assert set(hasil["steps"]) == {"gregorian", "hijri", "maya"}
+    assert "steps" not in convert("gregorian", "2026-11-05")
+    assert set(convert("maya", "13.0.14.1.7", steps=True)["steps"]) == {"hijri", "maya"}
