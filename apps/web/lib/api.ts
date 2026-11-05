@@ -19,6 +19,7 @@ export type Opsi = {
   correlation: string;
   leap: boolean;
   afterSunset: boolean;
+  steps?: boolean;
 };
 
 type TanggalBiasa = { year: number; month: number; day: number; label: string };
@@ -59,7 +60,7 @@ export async function konversi(opsi: Opsi): Promise<HasilApi> {
   });
   if (opsi.leap) params.set("leap", "true");
   if (opsi.afterSunset) params.set("after_sunset", "true");
-  params.set("steps", "true");
+  if (opsi.steps) params.set("steps", "true");
 
   let res: Response;
   try {
@@ -110,4 +111,31 @@ export async function bulan(
   const body: unknown = await res.json().catch(() => null);
   if (!res.ok) return { ok: false, pesan: pesanGalat(body) };
   return { ok: true, data: body as TabelBulan };
+}
+
+export type HariPenting = {
+  nama: string;
+  kalender: string;
+  rd: number;
+  hari_lagi: number;
+  label: string;
+};
+
+export async function hariPenting(
+  date: string,
+): Promise<{ ok: true; data: HariPenting[] } | { ok: false; pesan: string }> {
+  let res: Response;
+  try {
+    res = await fetch(`${API_ORIGIN}/v1/upcoming?${new URLSearchParams({ date })}`);
+  } catch {
+    return { ok: false, pesan: "API belum bisa dihubungi. Coba lagi sebentar lagi." };
+  }
+  const body: unknown = await res.json().catch(() => null);
+  if (!res.ok) return { ok: false, pesan: pesanGalat(body) };
+  return { ok: true, data: body as HariPenting[] };
+}
+
+export function hariIniDiJakarta(): string {
+  // en-CA menghasilkan format TAHUN-BULAN-TANGGAL
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta" }).format(new Date());
 }

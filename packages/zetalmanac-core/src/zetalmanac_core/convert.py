@@ -296,3 +296,47 @@ def month_table(year: int, month: int, *, scheme="II", epoch="civil") -> dict:
         "epoch": epoch,
         "days": days,
     }
+
+
+def _label_masehi(rd: int) -> str:
+    y, m, d = gregorian.from_rd(rd)
+    return f"{HARI[rd % 7]}, {d} {BULAN[m - 1]} {_tahun(y)}"
+
+
+def upcoming(rd: int, *, scheme="II", epoch="civil") -> list[dict]:
+    """Hari-hari penting berikutnya (termasuk hari ini), diurutkan dari yang terdekat."""
+    if not MIN_RD <= rd <= MAX_RD:
+        raise ValueError(
+            "Tanggal di luar rentang yang didukung (tahun 10000 SM sampai 9999 M)"
+        )
+    acara = []
+
+    hy, _, _ = hijri_urfi.from_rd(rd, scheme, epoch)
+    for bulan_h, nama in ((1, "1 Muharam"), (9, "1 Ramadan"), (10, "1 Syawal")):
+        target = hijri_urfi.to_rd(hy, bulan_h, 1, scheme, epoch)
+        tahun_h = hy
+        if target < rd:
+            tahun_h = hy + 1
+            target = hijri_urfi.to_rd(tahun_h, bulan_h, 1, scheme, epoch)
+        acara.append(
+            {"nama": f"{nama} {tahun_h} H (urfi)", "kalender": "hijri", "rd": target}
+        )
+
+    if CHINA_MIN_RD <= rd <= CHINA_MAX_RD:
+        cy, _, _, _ = china.from_rd(rd)
+        try:
+            target = china.to_rd(cy, 1, False, 1)
+            tahun_c = cy
+            if target < rd:
+                tahun_c = cy + 1
+                target = china.to_rd(tahun_c, 1, False, 1)
+            if target <= CHINA_MAX_RD:
+                label = f"Imlek {tahun_c} · {china.year_ganzhi(tahun_c)} ({china.year_label(tahun_c)})"
+                acara.append({"nama": label, "kalender": "china", "rd": target})
+        except ValueError:
+            pass  # Imlek berikutnya di luar rentang data
+
+    for item in acara:
+        item["hari_lagi"] = item["rd"] - rd
+        item["label"] = _label_masehi(item["rd"])
+    return sorted(acara, key=lambda item: item["rd"])

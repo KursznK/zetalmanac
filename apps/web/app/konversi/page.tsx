@@ -33,7 +33,7 @@ export default async function KonversiPage(props: PageProps<"/konversi">) {
     leap: satu(sp.leap) === "true",
     afterSunset: satu(sp.after_sunset) === "true",
   } as const;
-  const hasil = await konversi({ ...opsi });
+  const hasil = await konversi({ ...opsi, steps: true });
 
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-10 px-6 py-14">

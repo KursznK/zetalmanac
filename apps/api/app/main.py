@@ -1,7 +1,7 @@
 from typing import Annotated, Literal
 
 from fastapi import FastAPI, HTTPException, Query, Response
-from zetalmanac_core.convert import convert, month_table
+from zetalmanac_core.convert import convert, month_table, to_rd, upcoming
 
 app = FastAPI(title="Zetalmanac API", version="0.0.1")
 
@@ -65,6 +65,25 @@ def month_calendar(
     """
     try:
         hasil = month_table(year, month, scheme=scheme, epoch=epoch)
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e)) from e
+    response.headers["Cache-Control"] = CACHE_CONTROL
+    return hasil
+
+
+@app.get("/v1/upcoming")
+def upcoming_days(
+    response: Response,
+    date: Annotated[str, Query(max_length=20)],
+    scheme: Literal["I", "II", "III", "IV"] = "II",
+    epoch: Literal["civil", "astronomical"] = "civil",
+) -> list[dict]:
+    """Hari penting berikutnya (Imlek, 1 Ramadan, 1 Syawal, 1 Muharam) sejak tanggal Gregorian.
+
+    Contoh: /v1/upcoming?date=2026-11-05
+    """
+    try:
+        hasil = upcoming(to_rd("gregorian", date), scheme=scheme, epoch=epoch)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e)) from e
     response.headers["Cache-Control"] = CACHE_CONTROL
