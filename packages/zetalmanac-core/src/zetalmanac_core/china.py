@@ -1,8 +1,9 @@
 """Kalender China (农历, aturan pasca-1645) <-> RD.
 
 Aturan:
-1. Hari dimulai tengah malam waktu Beijing (UTC+8 sejak 1929; sebelumnya waktu lokal
-   Beijing, bujur 116°25' T = UTC+7:45:40).
+1. Hari dimulai tengah malam waktu Beijing: UTC+8 sejak 1929; sebelumnya waktu lokal
+   Beijing (bujur 116°25' T = UTC+7:45:40). Aturan ini memberi selisih paling sedikit
+   terhadap tabel HKO untuk 1901–1928 (lihat docs/specs/china.md).
 2. Bulan dimulai pada hari terjadinya bulan baru.
 3. Titik balik musim dingin (冬至, bujur Matahari 270°) selalu berada di bulan 11.
 4. Kalau dari bulan 11 ke bulan 11 berikutnya ada 13 bulan, bulan pertama yang tidak
@@ -50,12 +51,12 @@ ELEMEN = (
 )
 
 RD_1929 = gregorian.to_rd(1929, 1, 1)
-OFFSET_SEBELUM_1929 = (7 + 45 / 60 + 40 / 3600) / 24  # dalam hari
-OFFSET_SEJAK_1929 = 8 / 24
+OFFSET_SEBELUM_1929 = (7 + 45 / 60 + 40 / 3600) / 24  # waktu lokal Beijing, dalam hari
+OFFSET_SEJAK_1929 = 8 / 24  # UTC+8
 
 
 def beijing_day(utc_moment: float) -> int:
-    """Momen UTC (RD pecahan) -> hari (RD) menurut waktu Beijing."""
+    """Momen UTC (RD pecahan) -> hari (RD) menurut waktu Beijing pada masanya."""
     offset = OFFSET_SEJAK_1929 if utc_moment >= RD_1929 else OFFSET_SEBELUM_1929
     return floor(utc_moment + offset)
 
