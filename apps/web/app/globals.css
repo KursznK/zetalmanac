@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
-/* Palet Zetalmanac: kertas, tinta, nila, dan soga. Sama dengan mockup desain. */
+/* Palet Zetalmanac: kertas, tinta, nila, dan soga. Sama dengan mockup desain.
+   Tema: mengikuti perangkat, kecuali pengguna memilih lewat tombol (atribut data-theme di <html>). */
 :root {
+  color-scheme: light;
   --bg: #f5f1e8;
   --surface: #fbf9f4;
   --chip: #efe9dc;
@@ -16,7 +18,8 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
     --bg: #0e1320;
     --surface: #151b2b;
     --chip: #1d2438;
@@ -29,6 +32,21 @@
     --btn-bg: #d9a55b;
     --btn-ink: #0e1320;
   }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1320;
+  --surface: #151b2b;
+  --chip: #1d2438;
+  --ink: #ece4d2;
+  --muted: #a8a296;
+  --accent: #d9a55b;
+  --rule: #2a3247;
+  --head-bg: #151b2b;
+  --head-ink: #ece4d2;
+  --btn-bg: #d9a55b;
+  --btn-ink: #0e1320;
 }
 
 @theme inline {

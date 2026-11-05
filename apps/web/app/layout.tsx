@@ -41,10 +41,17 @@ export const metadata: Metadata = {
   description: "Konverter tanggal Gregorian, Julian, Hijriah urfi, China, dan Maya",
 };
 
+// Dijalankan sebelum halaman tampil, supaya tema pilihan pengguna langsung berlaku
+// (tanpa kedipan tema terang). Teksnya tetap, tidak memuat input dari pengguna.
+const SKRIP_TEMA = `(function(){try{var t=localStorage.getItem("tema");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}})();`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   const fonts = [lmRoman17, lmRoman, lmCaps, lmSans, lmMono].map((f) => f.variable).join(" ");
   return (
-    <html lang="id" className={`${fonts} h-full antialiased`}>
+    <html lang="id" className={`${fonts} h-full antialiased`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: SKRIP_TEMA }} />
+      </head>
       <body className="flex min-h-full flex-col bg-bg font-sans text-[17px] leading-relaxed text-ink">
         <SiteHeader />
         <div className="flex-1">{children}</div>
