@@ -112,9 +112,8 @@ def test_setiap_hari_cocok_dengan_hko(bulan):
                 continue
             kita = china.from_rd(rd)
             if kita != hko:
-                selisih.append(
-                    ("%04d-%02d-%02d" % gregorian.from_rd(rd), "HKO", hko, "kita", kita)
-                )
+                y, m, d = gregorian.from_rd(rd)
+                selisih.append((f"{y:04d}-{m:02d}-{d:02d}", "HKO", hko, "kita", kita))
     assert not selisih, f"{len(selisih)} hari berbeda, contoh: {selisih[:10]}"
 
 
