@@ -28,8 +28,9 @@ def convert_date(
     correlation: int = 584283,  # 584283, 584285, atau 584286; nilai lain ditolak oleh core
     leap: bool = False,
     after_sunset: bool = False,
+    steps: bool = False,
 ) -> dict:
-    """Ubah satu tanggal ke semua kalender.
+    """Ubah satu tanggal ke semua kalender. steps=true menambahkan langkah hitung.
 
     Contoh: /v1/convert?from=gregorian&date=2026-11-05
     """
@@ -42,6 +43,7 @@ def convert_date(
             correlation=correlation,
             leap=leap,
             after_sunset=after_sunset,
+            steps=steps,
         )
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e)) from e

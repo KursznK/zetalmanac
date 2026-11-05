@@ -54,3 +54,10 @@ def test_parameter_tidak_dikenal_422():
         {"date": "2026-11-05"},
     ):
         assert client.get("/v1/convert", params=params).status_code == 422, params
+
+
+def test_langkah_hanya_jika_diminta():
+    params = {"from": "gregorian", "date": "2026-11-05"}
+    assert "steps" not in client.get("/v1/convert", params=params).json()
+    body = client.get("/v1/convert", params={**params, "steps": "true"}).json()
+    assert body["steps"]["hijri"][-1]["baris"][-1] == "d = 141 − 118 + 1 = 24"

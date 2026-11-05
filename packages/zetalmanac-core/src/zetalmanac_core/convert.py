@@ -6,6 +6,7 @@ Dipakai oleh API (apps/api) supaya lapisan web tetap tipis dan semua logika teru
 import re
 
 from zetalmanac_core import china, gregorian, hijri_urfi, jd, julian, maya
+from zetalmanac_core.steps import gregorian_steps, hijri_steps, maya_steps
 
 CALENDARS = ("gregorian", "julian", "hijri", "china", "maya")
 
@@ -204,24 +205,35 @@ def convert(
     correlation=maya.GMT,
     leap=False,
     after_sunset=False,
+    steps=False,
 ) -> dict:
     """Teks tanggal dalam `calendar` -> tanggal di semua kalender.
 
     after_sunset hanya berlaku kalau input bukan Hijriah: tanggal Hijriah yang diketik
-    sudah menunjuk harinya sendiri.
+    sudah menunjuk harinya sendiri. steps=True menambahkan langkah hitung.
     """
     if calendar == "hijri":
         after_sunset = False
     rd = to_rd(
         calendar, text, scheme=scheme, epoch=epoch, correlation=correlation, leap=leap
     )
-    return describe(
+    hasil = describe(
         rd,
         scheme=scheme,
         epoch=epoch,
         correlation=correlation,
         after_sunset=after_sunset,
     )
+    if steps:
+        langkah = {
+            "hijri": hijri_steps(rd, scheme, epoch, after_sunset),
+            "maya": maya_steps(rd, correlation),
+        }
+        if calendar == "gregorian":
+            g = hasil["gregorian"]
+            langkah["gregorian"] = gregorian_steps(g["year"], g["month"], g["day"])
+        hasil["steps"] = langkah
+    return hasil
 
 
 ZHONGQI = {

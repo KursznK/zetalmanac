@@ -34,7 +34,10 @@ export type HasilKonversi = {
     | (TanggalBiasa & { leap: boolean; year_ganzhi: string; year_label: string; day_ganzhi: string })
     | null;
   maya: { long_count: string; correlation: number; tzolkin: string; haab: string; lord_of_night: string };
+  steps?: { gregorian?: Langkah[]; hijri: Langkah[]; maya: Langkah[] };
 };
+
+export type Langkah = { judul: string; baris: string[] };
 
 export type HasilApi = { ok: true; data: HasilKonversi } | { ok: false; pesan: string };
 
@@ -56,6 +59,7 @@ export async function konversi(opsi: Opsi): Promise<HasilApi> {
   });
   if (opsi.leap) params.set("leap", "true");
   if (opsi.afterSunset) params.set("after_sunset", "true");
+  params.set("steps", "true");
 
   let res: Response;
   try {
