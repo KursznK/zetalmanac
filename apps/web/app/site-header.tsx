@@ -3,6 +3,8 @@ import Link from "next/link";
 const NAV = [
   { href: "/", label: "Beranda" },
   { href: "/konversi", label: "Konversi" },
+  { href: "/kalender", label: "Kalender" },
+  { href: "/validasi", label: "Validasi" },
 ] as const;
 
 export default function SiteHeader() {

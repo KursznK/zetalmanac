@@ -222,3 +222,65 @@ def convert(
         correlation=correlation,
         after_sunset=after_sunset,
     )
+
+
+ZHONGQI = {
+    0: "春分",
+    30: "谷雨",
+    60: "小满",
+    90: "夏至",
+    120: "大暑",
+    150: "处暑",
+    180: "秋分",
+    210: "霜降",
+    240: "小雪",
+    270: "冬至",
+    300: "大寒",
+    330: "雨水",
+}
+
+
+def month_table(year: int, month: int, *, scheme="II", epoch="civil") -> dict:
+    """Satu bulan Gregorian, hari demi hari, dengan tanggal Hijriah urfi dan China."""
+    first = gregorian.to_rd(year, month, 1)
+    if not MIN_RD <= first <= MAX_RD:
+        raise ValueError("Tahun di luar rentang yang didukung (10000 SM sampai 9999 M)")
+    cal = china.default_calendar()
+    days = []
+    for day in range(1, gregorian.days_in_month(year, month) + 1):
+        rd = first + day - 1
+        hy, hm, hd = hijri_urfi.from_rd(rd, scheme, epoch)
+        entry = {
+            "day": day,
+            "rd": rd,
+            "weekday": rd % 7,  # 0 = Minggu
+            "hijri": {
+                "year": hy,
+                "month": hm,
+                "day": hd,
+                "month_name": hijri_urfi.MONTHS[hm - 1],
+            },
+            "china": None,
+        }
+        if CHINA_MIN_RD <= rd <= CHINA_MAX_RD:
+            cy, cm, leap, cd = cal.from_rd(rd)
+            lon = cal.zhongqi_by_day.get(rd)
+            entry["china"] = {
+                "year": cy,
+                "month": cm,
+                "leap": leap,
+                "day": cd,
+                "label": f"{'闰' if leap else ''}{CN_BULAN[cm - 1]}"
+                if cd == 1
+                else CN_HARI[cd],
+                "zhongqi": ZHONGQI[lon] if lon is not None else None,
+            }
+        days.append(entry)
+    return {
+        "year": year,
+        "month": month,
+        "month_name": BULAN[month - 1],
+        "scheme": scheme,
+        "epoch": epoch,
+        "days": days,
+    }

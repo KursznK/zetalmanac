@@ -1,9 +1,13 @@
 from typing import Annotated, Literal
 
 from fastapi import FastAPI, HTTPException, Query, Response
-from zetalmanac_core.convert import convert
+from zetalmanac_core.convert import convert, month_table
 
 app = FastAPI(title="Zetalmanac API", version="0.0.1")
+
+# Hasil konversi tidak pernah berubah untuk input yang sama.
+# max-age: cache browser 1 jam; s-maxage: cache CDN Vercel 1 hari.
+CACHE_CONTROL = "public, max-age=3600, s-maxage=86400"
 
 
 @app.get("/v1/health")
@@ -41,7 +45,25 @@ def convert_date(
         )
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e)) from e
-    # Hasil konversi tidak pernah berubah untuk input yang sama, jadi aman disimpan CDN sehari.
-    # max-age: cache browser 1 jam; s-maxage: cache CDN Vercel 1 hari
-    response.headers["Cache-Control"] = "public, max-age=3600, s-maxage=86400"
+    response.headers["Cache-Control"] = CACHE_CONTROL
+    return hasil
+
+
+@app.get("/v1/month")
+def month_calendar(
+    response: Response,
+    year: Annotated[int, Query(ge=-9999, le=9999)],
+    month: Annotated[int, Query(ge=1, le=12)],
+    scheme: Literal["I", "II", "III", "IV"] = "II",
+    epoch: Literal["civil", "astronomical"] = "civil",
+) -> dict:
+    """Satu bulan Gregorian, hari demi hari, dengan tanggal Hijriah urfi dan China.
+
+    Contoh: /v1/month?year=2026&month=11
+    """
+    try:
+        hasil = month_table(year, month, scheme=scheme, epoch=epoch)
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e)) from e
+    response.headers["Cache-Control"] = CACHE_CONTROL
     return hasil
