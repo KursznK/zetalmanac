@@ -44,6 +44,13 @@ def search(query: str, k: int = 5, lang: str | None = None) -> list[tuple[dict, 
     return indexes()[lang or detect_lang(query, kosakata())].search(query, k)
 
 
+def search_per_bahasa(query: str, k: int) -> dict[str, list[dict]]:
+    """Hasil BM25 dari setiap indeks bahasa, tanpa deteksi bahasa (skornya tidak sebanding)."""
+    return {
+        lang: [c for c, _ in idx.search(query, k)] for lang, idx in indexes().items()
+    }
+
+
 def main() -> None:
     query = " ".join(sys.argv[1:])
     if not query:
