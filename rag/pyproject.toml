@@ -3,13 +3,20 @@ name = "zetalmanac-rag"
 version = "0.1.0"
 description = "Korpus, ingestion, dan retrieval untuk asisten Zetalmanac"
 requires-python = ">=3.12"
-dependencies = ["pyyaml>=6", "snowballstemmer>=2.2"]
+dependencies = [
+    "pyyaml>=6",
+    "snowballstemmer>=2.2",
+    "zetalmanac-core",
+]
 
 [dependency-groups]
 dev = ["pytest>=8", "ruff>=0.15"]
 
 [tool.uv]
 package = false
+
+[tool.uv.sources]
+zetalmanac-core = { path = "../packages/zetalmanac-core", editable = true }
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
