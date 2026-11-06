@@ -79,3 +79,27 @@ jobs:
         run: uv run ruff format --check .
       - name: Tests
         run: uv run pytest -q
+
+  rag:
+    name: RAG (Python)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rag
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - name: Install dependencies (persis sesuai uv.lock)
+        run: uv sync --locked
+      - name: Lint
+        run: uv run ruff check .
+      - name: Format check
+        run: uv run ruff format --check .
+      - name: Tests
+        run: uv run pytest -q
+      - name: Corpus governance (lisensi, sha256, berkas tak tercatat)
+        run: uv run python -m zrag.check_corpus

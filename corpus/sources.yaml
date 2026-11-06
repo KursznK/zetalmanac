@@ -1,0 +1,187 @@
+# Manifest korpus Zetalmanac. Setiap dokumen wajib tercatat di sini.
+# Diperiksa oleh `uv run python -m zrag.check_corpus` dari folder rag/ (juga di CI).
+- id: spec-gregorian
+  title: Spesifikasi kalender Gregorian (Zetalmanac)
+  path: docs/specs/gregorian.md
+  lang: id
+  license: CC-BY-4.0
+  attribution: © 2026 Muhamad Zaky Kurniawan, Zetalmanac. CC BY 4.0
+  sha256: cf4a6e2816db1de1d67d6ea59953b7d3bb4df49e116c7ae2d83938f9a8dee770
+- id: spec-julian
+  title: Spesifikasi kalender Julian dan JD/JDN (Zetalmanac)
+  path: docs/specs/julian.md
+  lang: id
+  license: CC-BY-4.0
+  attribution: © 2026 Muhamad Zaky Kurniawan, Zetalmanac. CC BY 4.0
+  sha256: 3fd1776e6429d98048e5ba06bde1c2358fdd5c81ba2bc97ce8621f8e3c95be24
+- id: spec-maya
+  title: Spesifikasi kalender Maya (Zetalmanac)
+  path: docs/specs/maya.md
+  lang: id
+  license: CC-BY-4.0
+  attribution: © 2026 Muhamad Zaky Kurniawan, Zetalmanac. CC BY 4.0
+  sha256: 420d266afcba6a8324511fdf853eed16909ff77a94d59510915fb0948aa59f3d
+- id: spec-hijri-urfi
+  title: Spesifikasi kalender Hijriah hisab urfi (Zetalmanac)
+  path: docs/specs/hijri-urfi.md
+  lang: id
+  license: CC-BY-4.0
+  attribution: © 2026 Muhamad Zaky Kurniawan, Zetalmanac. CC BY 4.0
+  sha256: 3141b96f2a1eb3a377337c975c5893e3501d768bbc59ac8fb5335ac1452889f3
+- id: spec-china
+  title: Spesifikasi kalender China (Zetalmanac)
+  path: docs/specs/china.md
+  lang: id
+  license: CC-BY-4.0
+  attribution: © 2026 Muhamad Zaky Kurniawan, Zetalmanac. CC BY 4.0
+  sha256: 6327c92a4a24445466c6cd9d242804ff94f07079a33765641cd544266ef42d1d
+- id: wiki-en-gregorian-calendar
+  title: Gregorian calendar
+  wikipedia: Gregorian calendar
+  lang: en
+  license: CC-BY-SA-4.0
+  attribution: Kontributor Wikipedia, "Gregorian calendar", en.wikipedia.org, revisi 1380886632. CC BY-SA
+    4.0
+  path: corpus/clean/wiki-en-gregorian-calendar.md
+  url: https://en.wikipedia.org/w/index.php?title=Gregorian_calendar&oldid=1380886632
+  revision: 1380886632
+  retrieved_at: '2026-11-06'
+  sha256: f14642258895ed794102419eaaa64579544a93ba3aff5bc152edd6c79a607893
+- id: wiki-en-julian-calendar
+  title: Julian calendar
+  wikipedia: Julian calendar
+  lang: en
+  license: CC-BY-SA-4.0
+  attribution: Kontributor Wikipedia, "Julian calendar", en.wikipedia.org, revisi 1382567429. CC BY-SA
+    4.0
+  path: corpus/clean/wiki-en-julian-calendar.md
+  url: https://en.wikipedia.org/w/index.php?title=Julian_calendar&oldid=1382567429
+  revision: 1382567429
+  retrieved_at: '2026-11-06'
+  sha256: 10ef200fdf12c99b83581f1fe638e81113fd95398c45af64ff31482a43680b9d
+- id: wiki-en-julian-day
+  title: Julian day
+  wikipedia: Julian day
+  lang: en
+  license: CC-BY-SA-4.0
+  attribution: Kontributor Wikipedia, "Julian day", en.wikipedia.org, revisi 1380127410. CC BY-SA 4.0
+  path: corpus/clean/wiki-en-julian-day.md
+  url: https://en.wikipedia.org/w/index.php?title=Julian_day&oldid=1380127410
+  revision: 1380127410
+  retrieved_at: '2026-11-06'
+  sha256: 475e8087c0c8b7d15b204602ec43a267bb9d0cd354400df6e0c09fc5c4e5159d
+- id: wiki-en-tabular-islamic-calendar
+  title: Tabular Islamic calendar
+  wikipedia: Tabular Islamic calendar
+  lang: en
+  license: CC-BY-SA-4.0
+  attribution: Kontributor Wikipedia, "Tabular Islamic calendar", en.wikipedia.org, revisi 1379885725.
+    CC BY-SA 4.0
+  path: corpus/clean/wiki-en-tabular-islamic-calendar.md
+  url: https://en.wikipedia.org/w/index.php?title=Tabular_Islamic_calendar&oldid=1379885725
+  revision: 1379885725
+  retrieved_at: '2026-11-06'
+  sha256: 90dfa85fee61fa0f2a4e5d516499bb01f504c47d9ec3473a3a87edfe367a0889
+- id: wiki-en-chinese-calendar
+  title: Chinese calendar
+  wikipedia: Chinese calendar
+  lang: en
+  license: CC-BY-SA-4.0
+  attribution: Kontributor Wikipedia, "Chinese calendar", en.wikipedia.org, revisi 1382566695. CC BY-SA
+    4.0
+  path: corpus/clean/wiki-en-chinese-calendar.md
+  url: https://en.wikipedia.org/w/index.php?title=Chinese_calendar&oldid=1382566695
+  revision: 1382566695
+  retrieved_at: '2026-11-06'
+  sha256: 256804dbc972e571dd4e762fd2e64b469c5046126f439cccdd2c2d4e19ea6e39
+- id: wiki-en-solar-term
+  title: Solar term
+  wikipedia: Solar term
+  lang: en
+  license: CC-BY-SA-4.0
+  attribution: Kontributor Wikipedia, "Solar term", en.wikipedia.org, revisi 1378199713. CC BY-SA 4.0
+  path: corpus/clean/wiki-en-solar-term.md
+  url: https://en.wikipedia.org/w/index.php?title=Solar_term&oldid=1378199713
+  revision: 1378199713
+  retrieved_at: '2026-11-06'
+  sha256: 5bff75013b1ea60cf54c4f841f4fb5a89cfc6dc991b61e873b33f6977bb830d2
+- id: wiki-en-maya-calendar
+  title: Maya calendar
+  wikipedia: Maya calendar
+  lang: en
+  license: CC-BY-SA-4.0
+  attribution: Kontributor Wikipedia, "Maya calendar", en.wikipedia.org, revisi 1380185593. CC BY-SA 4.0
+  path: corpus/clean/wiki-en-maya-calendar.md
+  url: https://en.wikipedia.org/w/index.php?title=Maya_calendar&oldid=1380185593
+  revision: 1380185593
+  retrieved_at: '2026-11-06'
+  sha256: e3355a9ebca14c7b8b5868b0876d767e0df86f3569ef4313eef8b22644c0103a
+- id: wiki-en-mesoamerican-long-count-calendar
+  title: Mesoamerican Long Count calendar
+  wikipedia: Mesoamerican Long Count calendar
+  lang: en
+  license: CC-BY-SA-4.0
+  attribution: Kontributor Wikipedia, "Mesoamerican Long Count calendar", en.wikipedia.org, revisi 1378363988.
+    CC BY-SA 4.0
+  path: corpus/clean/wiki-en-mesoamerican-long-count-calendar.md
+  url: https://en.wikipedia.org/w/index.php?title=Mesoamerican_Long_Count_calendar&oldid=1378363988
+  revision: 1378363988
+  retrieved_at: '2026-11-06'
+  sha256: 835358bd10fc7fdfdfdfa1a411eedd7fe59d7e80ca016ac7c606421fbb687fd7
+- id: wiki-id-kalender-gregorius
+  title: Kalender Gregorius
+  wikipedia: Kalender Gregorius
+  lang: id
+  license: CC-BY-SA-4.0
+  attribution: Kontributor Wikipedia, "Kalender Gregorius", id.wikipedia.org, revisi 30095010. CC BY-SA
+    4.0
+  path: corpus/clean/wiki-id-kalender-gregorius.md
+  url: https://id.wikipedia.org/w/index.php?title=Kalender_Gregorius&oldid=30095010
+  revision: 30095010
+  retrieved_at: '2026-11-06'
+  sha256: 46d4cdb0fd059954f337127b2d6aead0c65d6ebecfd651b4f216d0fb482b3318
+- id: wiki-id-kalender-julius
+  title: Kalender Julius
+  wikipedia: Kalender Julius
+  lang: id
+  license: CC-BY-SA-4.0
+  attribution: Kontributor Wikipedia, "Kalender Julius", id.wikipedia.org, revisi 29379991. CC BY-SA 4.0
+  path: corpus/clean/wiki-id-kalender-julius.md
+  url: https://id.wikipedia.org/w/index.php?title=Kalender_Julius&oldid=29379991
+  revision: 29379991
+  retrieved_at: '2026-11-06'
+  sha256: 1d02b525850ae37edbec2a54530fedd37ca637cab21cfaf53bd7388ff312d619
+- id: wiki-id-kalender-hijriah
+  title: Kalender Hijriah
+  wikipedia: Kalender Hijriah
+  lang: id
+  license: CC-BY-SA-4.0
+  attribution: Kontributor Wikipedia, "Kalender Hijriah", id.wikipedia.org, revisi 30055259. CC BY-SA
+    4.0
+  path: corpus/clean/wiki-id-kalender-hijriah.md
+  url: https://id.wikipedia.org/w/index.php?title=Kalender_Hijriah&oldid=30055259
+  revision: 30055259
+  retrieved_at: '2026-11-06'
+  sha256: f2eb47e0b07651175d3fa18892824dc45dfe749a35f2dec677d884d0c6f0a345
+- id: wiki-id-kalender-tionghoa
+  title: Kalender Tionghoa
+  wikipedia: Kalender Tionghoa
+  lang: id
+  license: CC-BY-SA-4.0
+  attribution: Kontributor Wikipedia, "Imlek", id.wikipedia.org, revisi 29301801. CC BY-SA 4.0
+  path: corpus/clean/wiki-id-kalender-tionghoa.md
+  url: https://id.wikipedia.org/w/index.php?title=Imlek&oldid=29301801
+  revision: 29301801
+  retrieved_at: '2026-11-06'
+  sha256: efabedcc848f87f5ee9c666b0ebbf9838c9fe1997b8e9ea0dd11092eebc63877
+- id: wiki-id-kalender-maya
+  title: Kalender Maya
+  wikipedia: Kalender Maya
+  lang: id
+  license: CC-BY-SA-4.0
+  attribution: Kontributor Wikipedia, "Kalender Maya", id.wikipedia.org, revisi 28589774. CC BY-SA 4.0
+  path: corpus/clean/wiki-id-kalender-maya.md
+  url: https://id.wikipedia.org/w/index.php?title=Kalender_Maya&oldid=28589774
+  revision: 28589774
+  retrieved_at: '2026-11-06'
+  sha256: 8fbe4d83537cbd1f712798f73a4c3b6d1181c4de013fd2ad6f0207ce02d89693
