@@ -18,6 +18,8 @@ from zrag.manifest import REPO_ROOT
 
 ENV_FILE = REPO_ROOT / ".env"
 COBA_ULANG = (429, 500, 502, 503, 504)
+# Beberapa API (mis. Groq, di belakang Cloudflare) menolak User-Agent bawaan urllib (galat 1010).
+USER_AGENT = "zetalmanac-rag/0.1 (+https://github.com/KursznK/zetalmanac)"
 
 
 class Embedder(Protocol):
@@ -59,8 +61,25 @@ def rahasia(nama: str) -> str:
     return nilai
 
 
+class GalatHTTP(RuntimeError):
+    """Permintaan HTTP gagal setelah semua percobaan; `kode` = status HTTP terakhir."""
+
+    def __init__(self, kode: int, pesan: str) -> None:
+        super().__init__(pesan)
+        self.kode = kode
+
+
+def jeda_coba_ulang(retry_after: str | None, ke: int) -> float:
+    """Ikuti header Retry-After (detik) kalau ada; kalau tidak, 2, 4, 8, ... detik. Maks 60."""
+    try:
+        jeda = float(retry_after) if retry_after else 2.0 ** (ke + 1)
+    except ValueError:
+        jeda = 2.0 ** (ke + 1)
+    return min(max(jeda, 1.0), 60.0)
+
+
 def post_json(
-    url: str, headers: dict[str, str], body: dict, percobaan: int = 5
+    url: str, headers: dict[str, str], body: dict, percobaan: int = 6
 ) -> dict:
     """POST JSON dengan coba ulang (jeda 2, 4, 8, ... detik) untuk 429 dan galat server."""
     data = json.dumps(body).encode("utf-8")
@@ -69,7 +88,11 @@ def post_json(
             url,
             data=data,
             method="POST",
-            headers={"Content-Type": "application/json", **headers},
+            headers={
+                "Content-Type": "application/json",
+                "User-Agent": USER_AGENT,
+                **headers,
+            },
         )
         try:
             with urllib.request.urlopen(req, timeout=60) as resp:
@@ -77,11 +100,11 @@ def post_json(
         except urllib.error.HTTPError as e:
             if e.code not in COBA_ULANG or ke == percobaan - 1:
                 pesan = e.read().decode("utf-8", "replace")[:500]
-                raise RuntimeError(
-                    f"HTTP {e.code} dari {url.split('?')[0]}: {pesan}"
+                raise GalatHTTP(
+                    e.code, f"HTTP {e.code} dari {url.split('?')[0]}: {pesan}"
                 ) from e
-            jeda = 2 ** (ke + 1)
-            print(f"  HTTP {e.code}, coba lagi dalam {jeda} detik…")
+            jeda = jeda_coba_ulang(e.headers.get("retry-after"), ke)
+            print(f"  HTTP {e.code}, coba lagi dalam {jeda:.0f} detik…")
             time.sleep(jeda)
     raise AssertionError("tidak terjangkau")
 

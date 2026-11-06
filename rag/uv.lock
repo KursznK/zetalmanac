@@ -144,12 +144,28 @@ wheels = [
 ]
 
 [[package]]
+name = "zetalmanac-core"
+version = "0.1.0"
+source = { editable = "../packages/zetalmanac-core" }
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "hypothesis", specifier = ">=6.170.14" },
+    { name = "pytest", specifier = ">=9.2.0" },
+    { name = "ruff", specifier = ">=0.17.3" },
+]
+ephem = [{ name = "skyfield", specifier = ">=1.55" }]
+
+[[package]]
 name = "zetalmanac-rag"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "pyyaml" },
     { name = "snowballstemmer" },
+    { name = "zetalmanac-core" },
 ]
 
 [package.dev-dependencies]
@@ -162,6 +178,7 @@ dev = [
 requires-dist = [
     { name = "pyyaml", specifier = ">=6" },
     { name = "snowballstemmer", specifier = ">=2.2" },
+    { name = "zetalmanac-core", editable = "../packages/zetalmanac-core" },
 ]
 
 [package.metadata.requires-dev]

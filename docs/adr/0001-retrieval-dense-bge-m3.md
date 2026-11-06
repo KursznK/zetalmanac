@@ -53,3 +53,10 @@ gratis konten yang dikirim dipakai Google untuk mengembangkan produknya.
 - Korpus bertambah banyak teks berbahasa Indonesia, atau ada kueri berisi istilah/angka persis
   (mis. nomor korelasi, nama bulan) yang lebih cocok dicari secara leksikal.
 - Ada model embedding multibahasa gratis lain yang boleh dipakai situs.
+
+## Revisi
+
+- **6 November 2026 (Sesi 4.5):** saat meninjau jawaban LLM ditemukan bahwa bagian pembuka artikel
+  *Gregorian calendar* memuat aturan kabisat abad dan alasan reformasi, tetapi belum dilabeli untuk
+  q10 dan q11. Setelah label dilengkapi, recall@5 bge-m3 menjadi 0,77 (lintas 0,52). Urutan sistem
+  dan keputusan tidak berubah.
