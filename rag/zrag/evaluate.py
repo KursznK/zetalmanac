@@ -1,25 +1,32 @@
 """Evaluasi retrieval: recall@k dan MRR@10 per kategori (id, en, lintas bahasa).
 
-    uv run python -m zrag.evaluate            # cetak ringkasan
-    uv run python -m zrag.evaluate --tulis    # juga tulis eval/reports/retrieval-bm25.md
+    uv run python -m zrag.evaluate            # cetak laporan
+    uv run python -m zrag.evaluate --tulis    # juga tulis eval/reports/retrieval.md
+
+Sistem yang dibandingkan: BM25, dense (per model embedding yang vektornya sudah dibuat dengan
+zrag.embed_index), dan hybrid BM25 + dense yang digabung dengan RRF.
 
 recall@k = target relevan yang muncul di k potongan teratas / jumlah target
 MRR@10   = rata-rata 1/peringkat potongan relevan pertama (0 bila tidak ada di 10 teratas)
 """
 
+import math
 import sys
 from collections.abc import Callable
 from pathlib import Path
 
 import yaml
 
+from zrag.dense import PRODUKSI, cari, kueri_eval, rrf, tersedia
+from zrag.embed import EMBEDDERS
 from zrag.manifest import REPO_ROOT, load
-from zrag.search import search
+from zrag.search import search, search_per_bahasa
 
 DATASET = REPO_ROOT / "eval" / "datasets" / "retrieval" / "queries.yaml"
 REPORTS = REPO_ROOT / "eval" / "reports"
 KS = (1, 3, 5, 10)
 KATEGORI = ("id", "en", "lintas")
+KEDALAMAN = 50  # kandidat dari tiap retriever sebelum digabung dengan RRF
 
 Retriever = Callable[[str, int], list[dict]]
 
@@ -76,6 +83,46 @@ def bm25(query: str, k: int) -> list[dict]:
     return [c for c, _ in search(query, k)]
 
 
+def bm25_dua_bahasa(query: str, k: int) -> list[dict]:
+    """BM25 di indeks id dan en sekaligus, digabung dengan RRF (skor BM25 antar-indeks tidak
+    sebanding, peringkatnya sebanding)."""
+    return rrf(list(search_per_bahasa(query, KEDALAMAN).values()))[:k]
+
+
+def dense(nama: str) -> Retriever:
+    def cari_dense(query: str, k: int) -> list[dict]:
+        return [c for c, _ in cari(nama, kueri_eval(nama, query), k)]
+
+    return cari_dense
+
+
+def hybrid(nama: str) -> Retriever:
+    """RRF dari BM25 dua bahasa dan dense. BM25 dengan deteksi bahasa sengaja tidak dipakai:
+    kandidatnya hanya satu bahasa, sehingga RRF menyingkirkan temuan lintas bahasa dari dense
+    (lihat docs/adr/0001-retrieval-dense-bge-m3.md)."""
+
+    def cari_hybrid(query: str, k: int) -> list[dict]:
+        return rrf([bm25_dua_bahasa(query, KEDALAMAN), dense(nama)(query, KEDALAMAN)])[
+            :k
+        ]
+
+    return cari_hybrid
+
+
+def sistem() -> dict[str, Retriever]:
+    """Semua retriever yang bisa dievaluasi (yang vektornya belum dibuat dilewati)."""
+    hasil: dict[str, Retriever] = {"BM25": bm25, "BM25 dua bahasa": bm25_dua_bahasa}
+    for nama in EMBEDDERS:
+        if tersedia(nama):
+            hasil[nama] = dense(nama)
+            hasil[f"BM25 dua bahasa + {nama} (RRF)"] = hybrid(nama)
+        else:
+            print(
+                f"(lewati {nama}: vektor belum ada; jalankan zrag.embed_index {nama})"
+            )
+    return hasil
+
+
 def run(retriever: Retriever = bm25) -> list[dict]:
     bahasa_dokumen = {e["id"]: e["lang"] for e in load()}
     baris = []
@@ -105,34 +152,83 @@ def ringkas(baris: list[dict]) -> dict[str, dict[str, float]]:
     }
 
 
-def laporan(nama_sistem: str, baris: list[dict]) -> str:
-    kolom = [f"recall@{k}" for k in KS] + ["mrr@10"]
-    teks = [f"# Evaluasi retrieval: {nama_sistem}\n", f"Dataset: {len(baris)} kueri.\n"]
-    teks.append("| kategori | n | " + " | ".join(kolom) + " |")
-    teks.append("|---|---|" + "---|" * len(kolom))
-    for nama, m in ringkas(baris).items():
+def uji_tanda(
+    a: list[dict], b: list[dict], metrik: str = "recall@5"
+) -> tuple[int, int, float]:
+    """Uji tanda berpasangan (dua sisi): berapa kueri a menang, b menang, dan nilai p-nya.
+
+    Kueri yang seri diabaikan. p = peluang selisih sebesar ini (atau lebih) muncul kalau
+    sebenarnya kedua sistem sama baiknya (setiap kueri ibarat lempar koin 50:50).
+    """
+    menang_a = sum(x[metrik] > y[metrik] for x, y in zip(a, b, strict=True))
+    menang_b = sum(x[metrik] < y[metrik] for x, y in zip(a, b, strict=True))
+    n, kecil = menang_a + menang_b, min(menang_a, menang_b)
+    if n == 0:
+        return 0, 0, 1.0
+    ekor = sum(math.comb(n, i) for i in range(kecil + 1)) / 2**n
+    return menang_a, menang_b, min(1.0, 2 * ekor)
+
+
+def laporan(hasil: dict[str, list[dict]], acuan: str | None = None) -> str:
+    """Laporan Markdown untuk beberapa sistem sekaligus (dataset yang sama)."""
+    n = len(next(iter(hasil.values())))
+    teks = ["# Evaluasi retrieval\n", f"Dataset: {n} kueri, label diperiksa manusia.\n"]
+
+    teks.append("## Ringkasan\n")
+    teks.append(
+        "| sistem | recall@5 semua | id | en | lintas | recall@10 semua | mrr@10 |"
+    )
+    teks.append("|---|---|---|---|---|---|---|")
+    for nama, baris in hasil.items():
+        r = ringkas(baris)
+        sel = [
+            f"{r[g]['recall@5']:.2f}" if g in r else "-" for g in ("semua", *KATEGORI)
+        ]
         teks.append(
-            f"| {nama} | {m['n']} | " + " | ".join(f"{m[c]:.2f}" for c in kolom) + " |"
+            f"| {nama} | "
+            + " | ".join(sel)
+            + f" | {r['semua']['recall@10']:.2f} | {r['semua']['mrr@10']:.2f} |"
         )
-    teks.append("\n## Kueri dengan recall@5 < 1\n")
-    teks.append("| id | kategori | recall@5 | kueri | 3 teratas |")
-    teks.append("|---|---|---|---|---|")
-    for b in baris:
-        if b["recall@5"] < 1:
-            teratas = "<br>".join(b["teratas"]) or "(kosong)"
-            teks.append(
-                f"| {b['id']} | {b['kategori']} | {b['recall@5']:.2f} | {b['query']} | {teratas} |"
-            )
+
+    if acuan in hasil:
+        teks.append(f"\n## Uji tanda berpasangan terhadap {acuan} (recall@5)\n")
+        teks.append(
+            "Per kueri: siapa yang lebih tinggi; seri diabaikan. p kecil (< 0,05) berarti "
+            "selisihnya sulit dijelaskan sebagai kebetulan.\n"
+        )
+        teks.append(f"| sistem | sistem menang | {acuan} menang | p (dua sisi) |")
+        teks.append("|---|---|---|---|")
+        for nama, baris in hasil.items():
+            if nama != acuan:
+                a, b, p = uji_tanda(baris, hasil[acuan])
+                teks.append(f"| {nama} | {a} | {b} | {p:.2f} |")
+
+    kolom = [f"recall@{k}" for k in KS] + ["mrr@10"]
+    for nama, baris in hasil.items():
+        teks.append(f"\n## {nama}\n")
+        teks.append("| kategori | n | " + " | ".join(kolom) + " |")
+        teks.append("|---|---|" + "---|" * len(kolom))
+        for grup, m in ringkas(baris).items():
+            nilai_kolom = " | ".join(f"{m[c]:.2f}" for c in kolom)
+            teks.append(f"| {grup} | {m['n']} | {nilai_kolom} |")
+
+    nama_sistem = list(hasil)
+    teks.append("\n## recall@5 per kueri\n")
+    teks.append("| id | kategori | kueri | " + " | ".join(nama_sistem) + " |")
+    teks.append("|---|---|---|" + "---|" * len(nama_sistem))
+    for i, b in enumerate(next(iter(hasil.values()))):
+        sel = " | ".join(f"{hasil[s][i]['recall@5']:.2f}" for s in nama_sistem)
+        teks.append(f"| {b['id']} | {b['kategori']} | {b['query']} | {sel} |")
     return "\n".join(teks) + "\n"
 
 
 def main() -> None:
-    baris = run()
-    teks = laporan("BM25 per bahasa", baris)
+    hasil = {nama: run(r) for nama, r in sistem().items()}
+    teks = laporan(hasil, acuan=PRODUKSI)
     print(teks)
     if "--tulis" in sys.argv:
         REPORTS.mkdir(parents=True, exist_ok=True)
-        (REPORTS / "retrieval-bm25.md").write_text(teks, encoding="utf-8")
+        (REPORTS / "retrieval.md").write_text(teks, encoding="utf-8")
 
 
 if __name__ == "__main__":

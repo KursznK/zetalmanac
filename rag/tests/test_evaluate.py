@@ -72,3 +72,19 @@ def test_dataset_sah():
                 t,
                 "bagian tidak ditemukan",
             )
+
+
+def test_uji_tanda():
+    from zrag.evaluate import uji_tanda
+
+    def b(*nilai_r5):
+        return [{"recall@5": x} for x in nilai_r5]
+
+    # 9 menang lawan 2 (2 seri diabaikan): p = 2 * (C(11,0)+C(11,1)+C(11,2)) / 2^11
+    a = b(*([1.0] * 9 + [0.0] * 2 + [0.5] * 2))
+    c = b(*([0.0] * 9 + [1.0] * 2 + [0.5] * 2))
+    menang_a, menang_c, p = uji_tanda(a, c)
+    assert (menang_a, menang_c) == (9, 2)
+    assert p == pytest.approx(2 * (1 + 11 + 55) / 2048)
+    assert uji_tanda(b(1.0), b(1.0)) == (0, 0, 1.0)
+    assert uji_tanda(b(1.0), b(0.0))[2] == 1.0
