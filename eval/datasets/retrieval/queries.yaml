@@ -1,0 +1,231 @@
+# Dataset evaluasi retrieval Zetalmanac (Sesi 4.3).
+# Setiap kueri punya daftar target relevan: dokumen (doc) dan, bila perlu, bagian (section).
+#   section: judul bagian UTUH, dicocokkan dari ujung jejak judul. "Calendar Round" cocok dengan
+#     "Maya calendar › Calendar Round", tetapi tidak dengan sub-bagian "… › Calendar Round › Year Bearer".
+#     "(intro)" = bagian pembuka dokumen. Tanpa section = bagian mana pun dari dokumen itu.
+# Kategori (id / en / lintas) TIDAK ditulis manual: dihitung dari bahasa kueri dan bahasa dokumen target.
+# Aturan label: hanya bagian yang benar-benar MENJAWAB pertanyaan, bukan yang sekadar menyebut istilahnya.
+# Label diusulkan, lalu WAJIB diperiksa manusia sebelum dipakai mengambil keputusan.
+#
+# Catatan mutu korpus (ditemukan saat memeriksa label, 6 Nov 2026):
+#   tabel dan rumus Wikipedia hilang/rusak di ekstrak teks polos, jadi bagian ini TIDAK dijadikan label:
+#   wiki-id-kalender-hijriah "Nama-nama bulan" (tabel), wiki-id-kalender-tionghoa "Rumus tahun kabisat"
+#   dan "Tahun Baru Imlek" (tabel), wiki-en-julian-day "Converting Gregorian calendar date to Julian
+#   day number" (garis pecahan hilang), wiki-en-mesoamerican-long-count-calendar "Long Count periods"
+#   (tabel satuan hilang).
+
+# --- Hijriah ---
+- id: q01
+  query: kapan tahun kabisat hisab urfi
+  lang: id
+  relevan:
+    - {doc: spec-hijri-urfi, section: Parameter}
+    - {doc: wiki-en-tabular-islamic-calendar, section: 30-year cycle}
+- id: q02
+  query: skema kabisat urfi I II III IV
+  lang: id
+  relevan:
+    - {doc: spec-hijri-urfi, section: Parameter}
+    - {doc: wiki-en-tabular-islamic-calendar, section: 30-year cycle}
+- id: q03
+  query: apa beda epoch sipil dan astronomis kalender hijriah
+  lang: id
+  relevan:
+    - {doc: spec-hijri-urfi, section: Parameter}
+- id: q04
+  query: perbedaan hisab dan rukyat
+  lang: id
+  relevan:
+    - {doc: wiki-id-kalender-hijriah, section: Hisab dan Rukyat}
+- id: q05
+  query: nama-nama bulan hijriah
+  lang: id
+  relevan:
+    - {doc: spec-hijri-urfi, section: Aturan}
+- id: q06
+  query: bagaimana tahun 1 kalender islam ditentukan
+  lang: id
+  relevan:
+    - {doc: wiki-id-kalender-hijriah, section: Penentuan Tahun 1 Kalender Islam}
+
+# --- Julian Day ---
+- id: q07
+  query: julian day epoch noon
+  lang: en
+  relevan:
+    - {doc: wiki-en-julian-day, section: (intro)}
+    - {doc: spec-julian, section: JD dan JDN}
+- id: q08
+  query: modified julian date MJD
+  lang: en
+  relevan:
+    - {doc: wiki-en-julian-day, section: Variants}
+- id: q09
+  query: convert gregorian date to julian day number
+  lang: en
+  relevan:
+    # Rumus di wiki-en-julian-day rusak saat diekstrak; rumus utuh ada di spesifikasi.
+    - {doc: spec-gregorian, section: Rumus (semua pembagian = floor)}
+    - {doc: spec-julian, section: JD dan JDN}
+
+# --- Gregorian dan Julian ---
+- id: q10
+  query: why was the gregorian calendar introduced
+  lang: en
+  relevan:
+    - {doc: wiki-en-gregorian-calendar, section: Gregorian reform}
+    - {doc: wiki-id-kalender-gregorius, section: (intro)}
+- id: q11
+  query: gregorian leap year rule for century years
+  lang: en
+  relevan:
+    - {doc: wiki-en-gregorian-calendar, section: Description}
+    - {doc: spec-gregorian, section: Aturan}
+- id: q12
+  query: difference between julian and gregorian calendar dates
+  lang: en
+  relevan:
+    - {doc: wiki-en-gregorian-calendar, section: Difference between Gregorian and Julian calendar dates}
+- id: q13
+  query: selisih tanggal kalender julius dan gregorius
+  lang: id
+  relevan:
+    # wiki-id "Perbedaan dengan Kalender Julius" menjelaskan beda ATURAN kabisat, bukan selisih tanggal.
+    - {doc: wiki-en-gregorian-calendar, section: Difference between Gregorian and Julian calendar dates}
+- id: q14
+  query: mengapa kalender julius diperkenalkan
+  lang: id
+  relevan:
+    - {doc: wiki-id-kalender-julius, section: Alasan pendorong}
+    - {doc: wiki-en-julian-calendar, section: Motivation}
+- id: q15
+  query: julian calendar leap year error
+  lang: en
+  relevan:
+    - {doc: wiki-en-julian-calendar, section: Leap year error}
+- id: q16
+  query: proleptic gregorian calendar
+  lang: en
+  relevan:
+    - {doc: wiki-en-gregorian-calendar, section: Proleptic Gregorian calendar}
+
+# --- China ---
+- id: q17
+  query: what is a solar term jieqi
+  lang: en
+  relevan:
+    - {doc: wiki-en-solar-term, section: (intro)}
+    - {doc: wiki-en-chinese-calendar, section: Solar year and solar terms}
+- id: q18
+  query: how are solar terms determined by ecliptic longitude
+  lang: en
+  relevan:
+    - {doc: wiki-en-solar-term, section: Determination}
+- id: q19
+  query: aturan bulan kabisat kalender china
+  lang: id
+  relevan:
+    - {doc: spec-china, section: Aturan (pasca-1645)}
+    - {doc: wiki-en-chinese-calendar, section: Solar year and solar terms}
+- id: q20
+  query: kapan tahun baru imlek
+  lang: id
+  relevan:
+    - {doc: wiki-en-chinese-calendar, section: Chinese New Year}
+    - {doc: wiki-en-chinese-calendar, section: Horology › Year}
+- id: q21
+  query: dua belas shio
+  lang: id
+  relevan:
+    - {doc: wiki-id-kalender-tionghoa, section: Dua belas shio}
+- id: q22
+  query: zona waktu beijing kalender china sebelum 1929
+  lang: id
+  relevan:
+    - {doc: spec-china, section: Aturan (pasca-1645)}
+- id: q23
+  query: chinese calendar leap month without major solar term
+  lang: en
+  relevan:
+    - {doc: wiki-en-chinese-calendar, section: Solar year and solar terms}
+    - {doc: spec-china, section: Aturan (pasca-1645)}
+- id: q24
+  query: sexagenary cycle heavenly stems earthly branches
+  lang: en
+  relevan:
+    - {doc: wiki-en-chinese-calendar, section: Sexagenary system}
+
+# --- Maya ---
+- id: q25
+  query: maya long count baktun katun tun winal kin
+  lang: en
+  relevan:
+    - {doc: wiki-en-maya-calendar, section: Long Count}
+- id: q26
+  query: GMT correlation constant 584283
+  lang: en
+  relevan:
+    - {doc: wiki-en-mesoamerican-long-count-calendar, section: Correlations between Western calendars and the Long Count}
+    - {doc: spec-maya, section: Korelasi}
+- id: q27
+  query: tzolkin 260 day calendar
+  lang: en
+  relevan:
+    - {doc: wiki-en-maya-calendar, section: Tzolkʼin}
+- id: q28
+  query: haab months and wayeb
+  lang: en
+  relevan:
+    - {doc: wiki-en-maya-calendar, section: Haabʼ}
+- id: q29
+  query: kalender maya baktun
+  lang: id
+  relevan:
+    - {doc: wiki-id-kalender-maya, section: Jenis-jenis Kalender Maya}
+    - {doc: wiki-en-maya-calendar, section: Long Count}
+- id: q30
+  query: korelasi kalender maya dengan kalender masehi
+  lang: id
+  relevan:
+    - {doc: spec-maya, section: Korelasi}
+    - {doc: wiki-en-mesoamerican-long-count-calendar, section: Correlations between Western calendars and the Long Count}
+- id: q31
+  query: 2012 end of baktun 13
+  lang: en
+  relevan:
+    - {doc: wiki-en-mesoamerican-long-count-calendar, section: 2012 and the Long Count}
+    - {doc: wiki-en-maya-calendar, section: Long Count}
+- id: q32
+  query: lords of the night G1 to G9
+  lang: en
+  relevan:
+    - {doc: wiki-en-maya-calendar, section: Lords of the Night}
+- id: q33
+  query: calendar round 52 years
+  lang: en
+  relevan:
+    - {doc: wiki-en-maya-calendar, section: Calendar Round}
+    - {doc: wiki-en-maya-calendar, section: Overview}
+
+# --- Kueri tambahan dari Zaky ---
+- id: q34
+  query: mengapa calendar round berisi 52 tahun haab dan jarang dinyatakan sebagai 73 tahun tzolkin
+  lang: id
+  relevan:
+    # Korpus memberi 18.980 = 52 × 365 = 73 × 260, tetapi tidak menjelaskan eksplisit "mengapa jarang 73".
+    - {doc: wiki-en-maya-calendar, section: Calendar Round}
+    - {doc: wiki-id-kalender-maya, section: Jenis-jenis Kalender Maya}
+- id: q35
+  query: bagaimana bulan tambahan ditempatkan di tahun kabisat kalender china
+  lang: id
+  relevan:
+    - {doc: spec-china, section: Aturan (pasca-1645)}
+    - {doc: wiki-en-chinese-calendar, section: Solar year and solar terms}
+- id: q36
+  query: mengapa hari di kalender hijriyah dimulai saat matahari terbenam
+  lang: id
+  relevan:
+    # "Nama-nama hari" hanya menyatakan BAHWA hari dimulai saat magrib; alasannya (hilal tampak sesudah
+    # matahari terbenam) ada di dua bagian ini.
+    - {doc: wiki-id-kalender-hijriah, section: Sejarah}
+    - {doc: wiki-id-kalender-hijriah, section: Hisab dan Rukyat}
