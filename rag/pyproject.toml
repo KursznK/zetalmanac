@@ -3,7 +3,7 @@ name = "zetalmanac-rag"
 version = "0.1.0"
 description = "Korpus, ingestion, dan retrieval untuk asisten Zetalmanac"
 requires-python = ">=3.12"
-dependencies = ["pyyaml>=6"]
+dependencies = ["pyyaml>=6", "snowballstemmer>=2.2"]
 
 [dependency-groups]
 dev = ["pytest>=8", "ruff>=0.15"]
