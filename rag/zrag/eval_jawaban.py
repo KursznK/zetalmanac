@@ -11,6 +11,7 @@ membaca eval/runs/, jadi penilaian bisa diulang tanpa memanggil API lagi.
 import json
 import sys
 import time
+import unicodedata
 from dataclasses import asdict
 from pathlib import Path
 
@@ -72,8 +73,20 @@ def jalankan(model: str, jeda: float = JEDA_DETIK) -> None:
             time.sleep(jeda)
 
 
+# gpt-oss sering memakai spasi sempit tak-terputus (U+202F) dan tanda hubung khusus (U+2011).
+# Di layar tampak sama, tetapi "8\u202fFebruari" != "8 Februari" bagi komputer.
+_SAMAKAN = dict.fromkeys(map(ord, "\u00a0\u2007\u2009\u202f"), " ") | dict.fromkeys(
+    map(ord, "\u2010\u2011\u2012\u2013\u2014"), "-"
+)
+
+
+def normal(teks: str) -> str:
+    """Samakan bentuk teks sebelum dicocokkan: Unicode NFKC, spasi/tanda hubung khusus, huruf kecil."""
+    return unicodedata.normalize("NFKC", teks).translate(_SAMAKAN).lower()
+
+
 def memuat(teks: str, pilihan: list[str]) -> bool:
-    return any(p.lower() in teks.lower() for p in pilihan)
+    return any(normal(p) in normal(teks) for p in pilihan)
 
 
 def argumen_tepat(harapan: dict, argumen: dict) -> bool:

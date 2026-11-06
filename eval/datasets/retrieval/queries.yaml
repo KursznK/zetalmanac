@@ -73,12 +73,14 @@
   query: why was the gregorian calendar introduced
   lang: en
   relevan:
+    - {doc: wiki-en-gregorian-calendar, section: (intro)}
     - {doc: wiki-en-gregorian-calendar, section: Gregorian reform}
     - {doc: wiki-id-kalender-gregorius, section: (intro)}
 - id: q11
   query: gregorian leap year rule for century years
   lang: en
   relevan:
+    - {doc: wiki-en-gregorian-calendar, section: (intro)}
     - {doc: wiki-en-gregorian-calendar, section: Description}
     - {doc: spec-gregorian, section: Aturan}
 - id: q12

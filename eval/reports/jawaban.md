@@ -6,21 +6,21 @@ Dataset: 16 pertanyaan (konversi, fakta, tolak). Retrieval: bge-m3 (ADR 0001).
 
 | model | konversi | fakta | tolak | total | token rata-rata | detik rata-rata |
 |---|---|---|---|---|---|---|
-| openai/gpt-oss-120b | 3/6 | 3/6 | 4/4 | 10/16 | 3055 | 3.1 |
-| qwen/qwen3.8-27b | 6/6 | 4/6 | 4/4 | 14/16 | 3383 | 7.7 |
+| openai/gpt-oss-120b | 6/6 | 5/6 | 4/4 | 15/16 | 3055 | 3.1 |
+| qwen/qwen3.8-27b | 6/6 | 5/6 | 4/4 | 15/16 | 3383 | 7.7 |
 
 ## openai/gpt-oss-120b
 
 | id | jenis | lulus | pemeriksaan gagal | token | retrieval |
 |---|---|---|---|---|---|
-| a01 | konversi | tidak | isi_benar | 3727 | bge-m3 |
-| a02 | konversi | tidak | isi_benar | 4693 | bge-m3 |
+| a01 | konversi | ya | - | 3727 | bge-m3 |
+| a02 | konversi | ya | - | 4693 | bge-m3 |
 | a03 | konversi | ya | - | 5568 | bge-m3 |
-| a04 | konversi | tidak | isi_benar | 4033 | bge-m3 |
+| a04 | konversi | ya | - | 4033 | bge-m3 |
 | a05 | konversi | ya | - | 4223 | bge-m3 |
 | a06 | konversi | ya | - | 4150 | bge-m3 |
-| a07 | fakta | tidak | isi_benar | 2134 | bge-m3 |
-| a08 | fakta | tidak | sitasi_relevan | 2377 | bge-m3 |
+| a07 | fakta | ya | - | 2134 | bge-m3 |
+| a08 | fakta | ya | - | 2377 | bge-m3 |
 | a09 | fakta | tidak | sitasi_relevan, isi_benar | 2594 | bge-m3 |
 | a10 | fakta | ya | - | 2630 | bge-m3 |
 | a11 | fakta | ya | - | 2439 | bge-m3 |
@@ -41,7 +41,7 @@ Dataset: 16 pertanyaan (konversi, fakta, tolak). Retrieval: bge-m3 (ADR 0001).
 | a05 | konversi | ya | - | 4928 | bge-m3 |
 | a06 | konversi | ya | - | 4780 | bge-m3 |
 | a07 | fakta | ya | - | 2365 | bge-m3 |
-| a08 | fakta | tidak | sitasi_relevan | 2699 | bge-m3 |
+| a08 | fakta | ya | - | 2699 | bge-m3 |
 | a09 | fakta | tidak | sitasi_relevan | 2758 | bge-m3 |
 | a10 | fakta | ya | - | 2974 | bge-m3 |
 | a11 | fakta | ya | - | 2770 | bge-m3 |

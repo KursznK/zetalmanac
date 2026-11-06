@@ -101,6 +101,12 @@ def test_galat_dihitung_tidak_lulus():
     }
 
 
+def test_memuat_menyamakan_spasi_dan_tanda_hubung_khusus():
+    assert memuat("jatuh pada **8\u202fFebruari\u202f2027**", ["8 Februari 2027"])
+    assert memuat("berbeda 1\u20112 hari", ["1-2 hari"])
+    assert memuat("tanggal 8\u00a0Ramadan", ["8 Ramadan"])
+
+
 @pytest.mark.parametrize("teks", ["SABTU", "hari sabtu"])
 def test_memuat_tanpa_peduli_huruf(teks):
     assert memuat(teks, ["Sabtu"])

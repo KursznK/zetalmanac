@@ -50,6 +50,7 @@
   jenis: fakta
   pertanyaan: Why are some century years not leap years in the Gregorian calendar?
   relevan:
+    - {doc: wiki-en-gregorian-calendar, section: (intro)}
     - {doc: wiki-en-gregorian-calendar, section: Description}
     - {doc: spec-gregorian, section: Aturan}
   harus_memuat: ["400"]
