@@ -6,6 +6,7 @@ const NAV = [
   { href: "/konversi", label: "Konversi" },
   { href: "/kalender", label: "Kalender" },
   { href: "/validasi", label: "Validasi" },
+  { href: "/tanya", label: "Tanya" },
 ] as const;
 
 export default function SiteHeader() {

@@ -8,12 +8,11 @@ from functools import lru_cache
 from pathlib import Path
 
 from zrag.embed import EMBEDDERS
-from zrag.ingest import OUT
+from zrag.ingest import INDEX_DIR
 from zrag.manifest import REPO_ROOT
 from zrag.search import load_chunks
 from zrag.vectors import ada, dot, muat, sha256
 
-INDEX_DIR = OUT.parent
 EVAL_VECTORS = REPO_ROOT / "eval" / "vectors"
 PRODUKSI = "bge-m3"  # model yang dipakai situs; vektornya ikut ke apps/api
 RRF_K = 60  # konstanta baku dari makalah RRF (Cormack dkk., 2009)

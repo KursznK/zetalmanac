@@ -13,12 +13,12 @@ import sys
 import time
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
+from functools import lru_cache
 from zoneinfo import ZoneInfo
 
 from zrag.dense import PRODUKSI, cari
 from zrag.embed import CloudflareBgeM3, GalatHTTP, post_json, rahasia
-from zrag.manifest import load
-from zrag.search import search
+from zrag.search import load_chunks, search
 from zrag.tools import TOOLS, jalankan
 
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
@@ -127,16 +127,22 @@ def sitasi(teks: str, jumlah_sumber: int) -> tuple[list[int], list[int]]:
     )
 
 
+@lru_cache(maxsize=1)
 def info_dokumen() -> dict[str, dict]:
-    """Judul, URL, dan atribusi per dokumen, untuk ditampilkan di bawah jawaban."""
+    """Judul, URL, dan atribusi per dokumen, untuk ditampilkan di bawah jawaban.
+
+    Dibaca dari chunks.jsonl (bukan manifest korpus) supaya API tidak butuh folder corpus/.
+    """
     hasil = {}
-    for e in load():
-        url = e.get("url") or REPO_URL + e["path"]
-        hasil[e["id"]] = {
-            "judul": e["title"],
-            "url": url,
-            "atribusi": e["attribution"],
-        }
+    for c in load_chunks():
+        hasil.setdefault(
+            c["doc_id"],
+            {
+                "judul": c["title"],
+                "url": c["url"] or REPO_URL + c["path"],
+                "atribusi": c["attribution"],
+            },
+        )
     return hasil
 
 

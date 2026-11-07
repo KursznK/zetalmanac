@@ -7,12 +7,19 @@ korpus yang sama selalu menghasilkan berkas yang sama persis (diperiksa di tes).
 """
 
 import json
+import os
+from pathlib import Path
 
 from zrag.chunking import chunk_document
 from zrag.manifest import REPO_ROOT, load
 
-OUT = REPO_ROOT / "apps" / "api" / "data" / "index" / "chunks.jsonl"
-META = ("lang", "title", "url", "license", "attribution")
+# Lokasi indeks bisa diganti lewat ZRAG_INDEX_DIR: API di Vercel menunjuk ke folder datanya
+# sendiri, karena letak berkas repo di dalam bundel fungsi tidak dijamin sama.
+INDEX_DIR = Path(
+    os.environ.get("ZRAG_INDEX_DIR") or REPO_ROOT / "apps" / "api" / "data" / "index"
+)
+OUT = INDEX_DIR / "chunks.jsonl"
+META = ("lang", "title", "url", "license", "attribution", "path")
 
 
 def build() -> list[dict]:

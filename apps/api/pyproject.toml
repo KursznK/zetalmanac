@@ -10,6 +10,7 @@ requires-python = ">=3.12"
 dependencies = [
     "fastapi[standard]>=0.162.0",
     "zetalmanac-core",
+    "zetalmanac-rag",
 ]
 
 [dependency-groups]
@@ -23,6 +24,7 @@ package = false
 
 [tool.uv.sources]
 zetalmanac-core = { path = "../../packages/zetalmanac-core", editable = true }
+zetalmanac-rag = { path = "../../rag", editable = true }
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
