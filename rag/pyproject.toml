@@ -12,8 +12,14 @@ dependencies = [
 [dependency-groups]
 dev = ["pytest>=8", "ruff>=0.15"]
 
-[tool.uv]
-package = false
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+# Tata letak datar: paket zrag/ langsung di folder rag/ (bukan src/zrag/).
+module-name = "zrag"
+module-root = ""
 
 [tool.uv.sources]
 zetalmanac-core = { path = "../packages/zetalmanac-core", editable = true }

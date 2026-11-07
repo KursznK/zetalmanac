@@ -2,9 +2,10 @@
 
     uv run python -m zrag.tanya "kapan tahun kabisat hisab urfi?"
 
-Mode web gagal cepat: setiap panggilan API paling banyak dicoba 2 kali dengan jeda ≤ 3 detik
-(batas waktu fungsi Vercel Hobby bawaannya 10 detik). Kalau semua model gagal (mis. kuota harian
-habis), situs tetap menampilkan potongan sumber teratas dari retrieval, tanpa jawaban LLM.
+Mode web gagal cepat: setiap panggilan API paling banyak dicoba 2 kali dengan jeda ≤ 3 detik,
+karena pengunjung tidak mau menunggu lama (batas teknis fungsi Vercel Hobby dengan fluid compute
+jauh lebih longgar: 300 detik). Kalau semua model gagal (mis. kuota harian habis), situs tetap
+menampilkan potongan sumber teratas dari retrieval, tanpa jawaban LLM.
 """
 
 import json

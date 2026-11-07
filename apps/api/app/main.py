@@ -3,7 +3,10 @@ from typing import Annotated, Literal
 from fastapi import FastAPI, HTTPException, Query, Response
 from zetalmanac_core.convert import convert, month_table, to_rd, upcoming
 
+from app.tanya import router as tanya_router
+
 app = FastAPI(title="Zetalmanac API", version="0.0.1")
+app.include_router(tanya_router)
 
 # Hasil konversi tidak pernah berubah untuk input yang sama.
 # max-age: cache browser 1 jam; s-maxage: cache CDN Vercel 1 hari.
