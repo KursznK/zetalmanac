@@ -85,7 +85,8 @@ def post_json(
     percobaan: int = 6,
     maks_jeda: float = 60.0,
 ) -> dict:
-    """POST JSON dengan coba ulang (jeda 2, 4, 8, ... detik) untuk 429 dan galat server."""
+    """POST JSON dengan coba ulang (jeda 2, 4, 8, ... detik) untuk 429, galat server, dan galat
+    jaringan. Setelah percobaan habis selalu melempar GalatHTTP (kode 0 = tanpa respons HTTP)."""
     data = json.dumps(body).encode("utf-8")
     for ke in range(percobaan):
         req = urllib.request.Request(
@@ -109,6 +110,14 @@ def post_json(
                 ) from e
             jeda = jeda_coba_ulang(e.headers.get("retry-after"), ke, maks_jeda)
             print(f"  HTTP {e.code}, coba lagi dalam {jeda:.0f} detik…")
+            time.sleep(jeda)
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
+            # Galat jaringan (waktu habis, koneksi putus): dicoba ulang seperti galat server.
+            # Kode 0 menandai "tidak ada respons HTTP".
+            if ke == percobaan - 1:
+                raise GalatHTTP(0, f"galat jaringan ke {url.split('?')[0]}: {e}") from e
+            jeda = jeda_coba_ulang(None, ke, maks_jeda)
+            print(f"  galat jaringan ({e}), coba lagi dalam {jeda:.0f} detik…")
             time.sleep(jeda)
     raise AssertionError("tidak terjangkau")
 

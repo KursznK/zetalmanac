@@ -79,3 +79,45 @@ def test_perbarui_hanya_mengirim_teks_baru(tmp_path):
     vs = muat(prefix)
     assert vs.ids == ["a", "b", "d"]
     assert vs.shas == [sha256("x"), sha256("baru"), sha256("x")]
+
+
+def test_galat_jaringan_dicoba_ulang(monkeypatch):
+    import io
+    import json as js
+
+    from zrag import embed
+
+    percobaan = []
+
+    class Resp(io.BytesIO):
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+    def urlopen(req, timeout):
+        percobaan.append(1)
+        if len(percobaan) < 3:
+            raise TimeoutError("The read operation timed out")
+        return Resp(js.dumps({"ok": True}).encode())
+
+    monkeypatch.setattr(embed.urllib.request, "urlopen", urlopen)
+    monkeypatch.setattr(embed.time, "sleep", lambda s: None)
+    assert embed.post_json("https://contoh.example", {}, {}) == {"ok": True}
+    assert len(percobaan) == 3
+
+
+def test_galat_jaringan_terus_menerus_jadi_galathttp(monkeypatch):
+    import pytest
+
+    from zrag import embed
+
+    def urlopen(req, timeout):
+        raise TimeoutError("habis")
+
+    monkeypatch.setattr(embed.urllib.request, "urlopen", urlopen)
+    monkeypatch.setattr(embed.time, "sleep", lambda s: None)
+    with pytest.raises(embed.GalatHTTP) as e:
+        embed.post_json("https://contoh.example", {}, {}, percobaan=2)
+    assert e.value.kode == 0
