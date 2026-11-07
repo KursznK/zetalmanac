@@ -27,3 +27,15 @@ berisi masalah yang **lolos** pemeriksaan otomatis tetapi terlihat saat jawaban 
   bisa dibedakan apakah ini akibat aturan baru atau keacakan.
 - **Kelemahan dataset:** a01 dan a03 bukan uji tool yang tegas karena jawabannya ada di korpus.
   Ditambahkan **a17** (17 Maret 1987) yang hasilnya tidak ada di korpus.
+
+## Uji manual di produksi (7 November 2026)
+
+| pertanyaan | model | masalah | jenis |
+|---|---|---|---|
+| "Kapan tahun kabisat dalam hisab urfi, dan mana yang umum digunakan di dunia?" | gpt-oss-120b | Daftar skema benar, tetapi "skema II paling umum dipakai secara internasional [1]" tidak dinyatakan sumber [1] (hanya disebut sebagai bawaan Zetalmanac). Pertanyaan dua bagian; sumber hanya menjawab bagian pertama. | klaim tidak didukung sumber |
+| (sama) | gpt-oss-120b | "Skema II … standar 'civil'": mencampur skema kabisat dengan pilihan epoch. | istilah tercampur |
+| "1 Ramadhan 1500 H jatuh pada tanggal berapa Masehi?" | gpt-oss-120b | Tanggal benar (via tool), tetapi kalimat catatan hisab urfi (dari hasil tool) diberi sitasi ke sumber yang tidak membahasnya. | sitasi keliru |
+
+Pola berulang: **pertanyaan dua bagian** dan **kalimat dari hasil tool yang diberi sitasi sumber**.
+Kandidat pertanyaan uji berikutnya, dan alasan pemeriksaan *faithfulness* per klaim menjadi
+perbaikan prioritas.
