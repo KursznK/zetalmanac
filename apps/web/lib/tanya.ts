@@ -40,7 +40,10 @@ export async function kirimPertanyaan(pertanyaan: string, turnstile: string): Pr
         typeof body === "object" && body !== null && "detail" in body && typeof body.detail === "string"
           ? body.detail
           : null;
-      if (resp.status === 429) return { ok: false, pesan: "Terlalu banyak pertanyaan. Tunggu sebentar lalu coba lagi." };
+      // 429 atau penolakan WAF Vercel (header x-vercel-mitigated, aksi Deny = 403).
+      if (resp.status === 429 || resp.headers.get("x-vercel-mitigated")) {
+        return { ok: false, pesan: "Terlalu banyak pertanyaan dalam waktu singkat. Tunggu satu menit lalu coba lagi." };
+      }
       return { ok: false, pesan: detail ?? "Terjadi galat. Coba lagi beberapa saat lagi." };
     }
     return { ok: true, data: body as HasilTanya };
