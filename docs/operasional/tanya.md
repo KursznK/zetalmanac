@@ -34,7 +34,7 @@ menampilkan "belum dikonfigurasi".
 ## Aturan WAF (proyek web)
 
 - **If:** Request Path *equals* `/api/v1/tanya`
-- **Then:** Rate Limit, Fixed Window 60 detik, 5 request, per IP, aksi *Deny* (HTTP 429)
+- **Then:** Rate Limit, Fixed Window 60 detik, 5 request, per IP, aksi *Deny* (HTTP 403)
 - Hobby: 1 aturan rate limit gratis per proyek.
 
 Aturan dipasang di proyek **web**, bukan API: permintaan ke API datang lewat rewrite, jadi di API
