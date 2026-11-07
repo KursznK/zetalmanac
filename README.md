@@ -103,6 +103,21 @@ Qwen's two conversion "failures" answered correctly from the sources instead of 
 ([`jawaban-tinjauan.md`](eval/reports/jawaban-tinjauan.md)) found faithfulness problems that pass
 automatic checks, e.g. a cited sentence the source does not support.
 
+**Faithfulness per claim** (58 claims, human-labelled, then judged by an LLM from a *different*
+model family than the one that wrote the answer):
+
+| Answering model | Claims | Unsupported or overstated | Wrong citation |
+|---|---|---|---|
+| gpt-oss-120b | 23 | 7 (30%) | 6 |
+| Qwen3.8-27B | 35 | 6 (17%) | 2 |
+
+The difference is not significant (Fisher p = 0.34), but it points the opposite way from the
+pass-rate ranking, so it is tracked. The LLM judge agreed with the human labels with Cohen's
+kappa 0.53 and caught 9 of 13 problematic claims, so it is used to *flag* claims for human review,
+not as a final metric. Its one systematic error (lowering the support label when only the citation
+was wrong) will be fixed and re-validated on new claims, not on the same 58
+([adjudication](eval/reports/faithfulness-tinjauan.md)).
+
 **Security** (17 attacks mapped to the OWASP Top 10 for LLM Applications 2025):
 
 - 17/17 attacks handled, stopped by different layers: input validation 1, Prompt Guard 5,
@@ -127,9 +142,11 @@ automatic checks, e.g. a cited sentence the source does not support.
 
 - Hijri dates are tabular (*hisab urfi*); official dates set by sighting or astronomical criteria
   can differ by 1–2 days. The UI says so.
-- Answer faithfulness is not yet checked claim by claim; the manual review shows it matters most
-  for two-part questions where the sources answer only one part.
-- Evaluation sets are small (36 / 17 / 17 items), so only large differences are detectable.
+- Faithfulness is measured on a small human-labelled sample (58 claims, one annotator); the
+  automatic judge is a screening tool (kappa 0.53), not a guarantee. Problems concentrate in
+  two-part questions and in tool-derived sentences that carry a source citation.
+- Evaluation sets are small (36 queries, 17 questions, 17 attacks, 58 claims), so only large
+  differences are detectable.
 - Wikipedia tables and formulas are lost in plain-text extraction; affected sections are excluded
   from labels and listed in the dataset.
 
