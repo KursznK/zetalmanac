@@ -16,3 +16,14 @@ berisi masalah yang **lolos** pemeriksaan otomatis tetapi terlihat saat jawaban 
 - Lulus pemeriksaan otomatis tidak sama dengan benar. Perlu pemeriksaan kesetiaan pada sumber
   (*faithfulness*) per klaim, oleh manusia atau oleh LLM penilai yang berbeda dari model penjawab.
 - Kalimat yang terdengar meyakinkan dan diberi sitasi tetap bisa tidak didukung sumbernya (a07).
+
+## Run ulang 7 November 2026 (prompt dengan aturan keamanan dan kanari)
+
+- **gpt-oss-120b: tidak turun** (15/16, gagal yang sama: a09). Aturan keamanan tidak mengganggu
+  pertanyaan wajar.
+- **qwen3.8-27b: 15/16 → 13/16.** a01 dan a03 gagal hanya karena tool tidak dipanggil; isinya benar
+  dan sitasinya sah. Tanggal keduanya memang tercantum di korpus (*Jangkar uji* spesifikasi Hijriah dan
+  artikel Long Count), jadi Qwen menjawab dari sumber. Dengan satu kali run dan temperature 0,7, tidak
+  bisa dibedakan apakah ini akibat aturan baru atau keacakan.
+- **Kelemahan dataset:** a01 dan a03 bukan uji tool yang tegas karena jawabannya ada di korpus.
+  Ditambahkan **a17** (17 Maret 1987) yang hasilnya tidak ada di korpus.

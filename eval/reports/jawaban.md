@@ -1,13 +1,13 @@
 # Evaluasi jawaban (RAG + tool)
 
-Dataset: 16 pertanyaan (konversi, fakta, tolak). Retrieval: bge-m3 (ADR 0001).
+Dataset: 17 pertanyaan (konversi, fakta, tolak). Retrieval: bge-m3 (ADR 0001).
 
 ## Ringkasan (pertanyaan lulus / jumlah)
 
 | model | konversi | fakta | tolak | total | token rata-rata | detik rata-rata |
 |---|---|---|---|---|---|---|
-| openai/gpt-oss-120b | 6/6 | 5/6 | 4/4 | 15/16 | 3128 | 2.8 |
-| qwen/qwen3.8-27b | 4/6 | 5/6 | 4/4 | 13/16 | 3121 | 6.7 |
+| openai/gpt-oss-120b | 7/7 | 5/6 | 4/4 | 16/17 | 3213 | 2.8 |
+| qwen/qwen3.8-27b | 5/7 | 5/6 | 4/4 | 14/17 | 3235 | 6.5 |
 
 ## openai/gpt-oss-120b
 
@@ -19,6 +19,7 @@ Dataset: 16 pertanyaan (konversi, fakta, tolak). Retrieval: bge-m3 (ADR 0001).
 | a04 | konversi | ya | - | 4007 | bge-m3 |
 | a05 | konversi | ya | - | 4353 | bge-m3 |
 | a06 | konversi | ya | - | 4268 | bge-m3 |
+| a17 | konversi | ya | - | 4568 | bge-m3 |
 | a07 | fakta | ya | - | 2207 | bge-m3 |
 | a08 | fakta | ya | - | 2428 | bge-m3 |
 | a09 | fakta | tidak | sitasi_relevan, isi_benar | 2561 | bge-m3 |
@@ -40,6 +41,7 @@ Dataset: 16 pertanyaan (konversi, fakta, tolak). Retrieval: bge-m3 (ADR 0001).
 | a04 | konversi | ya | - | 4302 | bge-m3 |
 | a05 | konversi | ya | - | 5037 | bge-m3 |
 | a06 | konversi | ya | - | 4896 | bge-m3 |
+| a17 | konversi | ya | - | 5056 | bge-m3 |
 | a07 | fakta | ya | - | 2468 | bge-m3 |
 | a08 | fakta | ya | - | 2785 | bge-m3 |
 | a09 | fakta | tidak | sitasi_relevan, isi_benar | 2744 | bge-m3 |
