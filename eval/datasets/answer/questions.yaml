@@ -38,6 +38,13 @@
   pertanyaan: Tanggal 1 Januari 2000 jatuh pada hari apa?
   tool: {kalender: gregorian, tanggal: "2000-01-01"}
   harus_memuat: [Sabtu]
+- id: a17
+  jenis: konversi
+  # Ditambahkan 7 Nov 2026: tanggal ini (dan hasilnya) tidak ada di korpus, jadi hanya bisa
+  # dijawab lewat tool. Jawaban a01 dan a03 ternyata tercantum di korpus (lihat jawaban-tinjauan.md).
+  pertanyaan: Tanggal 17 Maret 1987 bertepatan dengan tanggal berapa dalam kalender Hijriah?
+  tool: {kalender: gregorian, tanggal: "1987-03-17"}
+  harus_memuat: [16 Rajab 1407]
 
 # --- fakta ---
 - id: a07

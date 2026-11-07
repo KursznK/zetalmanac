@@ -69,17 +69,21 @@ class GalatHTTP(RuntimeError):
         self.kode = kode
 
 
-def jeda_coba_ulang(retry_after: str | None, ke: int) -> float:
-    """Ikuti header Retry-After (detik) kalau ada; kalau tidak, 2, 4, 8, ... detik. Maks 60."""
+def jeda_coba_ulang(retry_after: str | None, ke: int, maks: float = 60.0) -> float:
+    """Ikuti header Retry-After (detik) kalau ada; kalau tidak, 2, 4, 8, ... detik. Dibatasi `maks`."""
     try:
         jeda = float(retry_after) if retry_after else 2.0 ** (ke + 1)
     except ValueError:
         jeda = 2.0 ** (ke + 1)
-    return min(max(jeda, 1.0), 60.0)
+    return min(max(jeda, 1.0), maks)
 
 
 def post_json(
-    url: str, headers: dict[str, str], body: dict, percobaan: int = 6
+    url: str,
+    headers: dict[str, str],
+    body: dict,
+    percobaan: int = 6,
+    maks_jeda: float = 60.0,
 ) -> dict:
     """POST JSON dengan coba ulang (jeda 2, 4, 8, ... detik) untuk 429 dan galat server."""
     data = json.dumps(body).encode("utf-8")
@@ -103,7 +107,7 @@ def post_json(
                 raise GalatHTTP(
                     e.code, f"HTTP {e.code} dari {url.split('?')[0]}: {pesan}"
                 ) from e
-            jeda = jeda_coba_ulang(e.headers.get("retry-after"), ke)
+            jeda = jeda_coba_ulang(e.headers.get("retry-after"), ke, maks_jeda)
             print(f"  HTTP {e.code}, coba lagi dalam {jeda:.0f} detik…")
             time.sleep(jeda)
     raise AssertionError("tidak terjangkau")

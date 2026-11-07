@@ -31,6 +31,7 @@ def test_pesan_awal_memisahkan_sumber_dan_pertanyaan():
     assert pesan[0]["role"] == "system"
     assert PENANDA_TIDAK_ADA in pesan[0]["content"]
     assert "2026-11-06" in pesan[0]["content"]
+    assert modul.KANARI in pesan[0]["content"]
     assert '<sumber nomor="2" dokumen="d" bagian="D › B">' in pesan[1]["content"]
     assert pesan[2]["content"].endswith("Apa itu?")
 
@@ -69,7 +70,7 @@ def test_alur_tool_lalu_jawaban(monkeypatch):
     ]
     terkirim = []
 
-    def palsu(model, messages):
+    def palsu(model, messages, *_):
         terkirim.append([dict(m) for m in messages])
         return antrean.pop(0)
 
@@ -86,7 +87,7 @@ def test_penanda_tidak_ditemukan_dibuang(monkeypatch):
     monkeypatch.setattr(
         modul,
         "panggil_groq",
-        lambda m, p: respons(f"{PENANDA_TIDAK_ADA} Maaf, tidak ada di sumber. [9]"),
+        lambda m, p, *_: respons(f"{PENANDA_TIDAK_ADA} Maaf, tidak ada di sumber. [9]"),
     )
     j = jawab("Resep rendang?", sumber=SUMBER, hari_ini="2026-11-06")
     assert not j.ditemukan
@@ -99,7 +100,7 @@ def test_tool_use_failed_dicoba_sekali_lagi(monkeypatch):
 
     percobaan = []
 
-    def kirim(model, messages):
+    def kirim(model, messages, *_):
         percobaan.append(1)
         if len(percobaan) == 1:
             raise GalatHTTP(400, "HTTP 400: ... tool_use_failed ...")
@@ -115,7 +116,7 @@ def test_galat_lain_tidak_dicoba_ulang(monkeypatch):
 
     from zrag.embed import GalatHTTP
 
-    def kirim(model, messages):
+    def kirim(model, messages, *_):
         raise GalatHTTP(401, "HTTP 401: invalid api key")
 
     monkeypatch.setattr(modul, "_kirim_groq", kirim)
