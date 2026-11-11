@@ -44,7 +44,7 @@ export default function ThemeToggle() {
       onClick={ganti}
       aria-label={tema ? `Ganti ke tema ${berikutnya}` : "Ganti tema"}
       title={tema ? `Ganti ke tema ${berikutnya}` : "Ganti tema"}
-      className="inline-flex size-11 items-center justify-center rounded-full border border-current/40"
+      className="inline-flex size-11 cursor-pointer items-center justify-center rounded-full border border-current/40 transition hover:rotate-[18deg] hover:bg-white/10"
     >
       <svg
         width="18"

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { bulan, type HariBulan } from "@/lib/api";
+import { bulan } from "@/lib/api";
+import Kisi from "./kisi";
 
 export const metadata: Metadata = { title: "Kalender · Zetalmanac" };
 
-const NAMA_HARI = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+const TOMBOL_NAV =
+  "inline-flex h-11 items-center border border-rule bg-surface px-4 transition-colors hover:border-muted hover:bg-chip";
 
 function satu(nilai: string | string[] | undefined): string | undefined {
   return Array.isArray(nilai) ? nilai[0] : nilai;
@@ -43,11 +45,11 @@ export default async function KalenderPage(props: PageProps<"/kalender">) {
   const sesudah = bulanTetangga(pilihan.year, pilihan.month, 1);
 
   return (
-    <main className="mx-auto flex max-w-5xl flex-col gap-8 px-6 py-14">
+    <main className="mx-auto flex max-w-5xl flex-col gap-7 px-6 py-14">
       <div className="flex flex-wrap items-end justify-between gap-5">
         <div className="flex flex-col gap-1.5">
-          <p className="font-caps tracking-[0.14em] text-accent">kalender bulanan</p>
-          <h1 className="font-display text-5xl leading-tight">
+          <p className="font-caps tracking-[0.14em] text-accent">Kalender Bulanan</p>
+          <h1 className="font-display text-[2.5rem] leading-tight sm:text-5xl">
             {hasil.ok ? `${hasil.data.month_name} ${pilihan.year}` : "Kalender"}
           </h1>
           {hasil.ok ? (
@@ -56,28 +58,27 @@ export default async function KalenderPage(props: PageProps<"/kalender">) {
             </p>
           ) : null}
         </div>
-        <nav aria-label="Pindah bulan" className="flex gap-2">
-          <Link
-            href={`/kalender?year=${sebelum.year}&month=${sebelum.month}`}
-            className="inline-flex h-11 items-center border border-rule bg-surface px-4"
-          >
+        <nav aria-label="Pindah bulan" className="flex flex-wrap gap-2">
+          <Link href={`/kalender?year=${sebelum.year}&month=${sebelum.month}`} className={TOMBOL_NAV}>
             ← Sebelumnya
           </Link>
-          <Link href="/kalender" className="inline-flex h-11 items-center border border-rule bg-surface px-4">
+          <Link href="/kalender" className={TOMBOL_NAV}>
             Bulan ini
           </Link>
-          <Link
-            href={`/kalender?year=${sesudah.year}&month=${sesudah.month}`}
-            className="inline-flex h-11 items-center border border-rule bg-surface px-4"
-          >
+          <Link href={`/kalender?year=${sesudah.year}&month=${sesudah.month}`} className={TOMBOL_NAV}>
             Berikutnya →
           </Link>
         </nav>
       </div>
 
       {hasil.ok ? (
+        // key: pindah bulan memulai ulang pilihan tanggal (kembali ke hari ini atau tanggal 1)
         <Kisi
+          key={`${pilihan.year}-${pilihan.month}`}
           days={hasil.data.days}
+          year={pilihan.year}
+          month={pilihan.month}
+          monthName={hasil.data.month_name}
           hariIni={
             hariIni.year === pilihan.year && hariIni.month === pilihan.month ? hariIni.day : null
           }
@@ -89,77 +90,11 @@ export default async function KalenderPage(props: PageProps<"/kalender">) {
       )}
 
       <p className="text-sm text-muted">
-        Baris kedua tiap sel: tanggal Hijriah urfi (skema II, epoch sipil), berlaku untuk siang hari;
-        setelah magrib sudah tanggal berikutnya. Baris ketiga: tanggal China (nama bulan muncul di
-        awal bulan). Tanda ● menandai zhongqi.
+        Klik sebuah tanggal untuk melihat rinciannya. Baris kedua tiap sel adalah tanggal Hijriah urfi
+        (skema II, epoch sipil), berlaku untuk siang hari, dan setelah magrib sudah masuk ke tanggal
+        berikutnya. Baris ketiga adalah tanggal China (nama bulan muncul di awal bulan). Tanda ●
+        menandai <em>zhongqi</em>.
       </p>
     </main>
-  );
-}
-
-function Kisi({ days, hariIni }: { days: HariBulan[]; hariIni: number | null }) {
-  const kosong = days[0]?.weekday ?? 0;
-  return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[640px] table-fixed border-collapse">
-        <thead>
-          <tr>
-            {NAMA_HARI.map((nama) => (
-              <th
-                key={nama}
-                scope="col"
-                className="border border-rule bg-chip px-3 py-2 text-left font-caps text-[15px] font-normal tracking-[0.08em] text-muted"
-              >
-                {nama.toLowerCase()}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {baris(days, kosong).map((minggu, i) => (
-            <tr key={i}>
-              {minggu.map((h, j) =>
-                h ? (
-                  <Sel key={j} h={h} hariIni={h.day === hariIni} />
-                ) : (
-                  <td key={j} className="border border-rule bg-chip" />
-                ),
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function baris(days: HariBulan[], kosong: number): (HariBulan | null)[][] {
-  const sel: (HariBulan | null)[] = [...Array<null>(kosong).fill(null), ...days];
-  while (sel.length % 7 !== 0) sel.push(null);
-  const hasil: (HariBulan | null)[][] = [];
-  for (let i = 0; i < sel.length; i += 7) hasil.push(sel.slice(i, i + 7));
-  return hasil;
-}
-
-function Sel({ h, hariIni }: { h: HariBulan; hariIni: boolean }) {
-  const hijri = h.hijri.day === 1 ? `1 ${h.hijri.month_name}` : String(h.hijri.day);
-  return (
-    <td
-      aria-current={hariIni ? "date" : undefined}
-      className={`h-28 border border-rule bg-surface p-2 align-top ${hariIni ? "outline-2 -outline-offset-2 outline-ink" : ""}`}
-    >
-      <div className="flex h-full flex-col gap-0.5">
-        <div className="flex items-start justify-between">
-          <span className="font-display text-3xl leading-none">{h.day}</span>
-          {h.china?.zhongqi ? (
-            <span className="text-xs text-accent" title={`Zhongqi ${h.china.zhongqi}`}>
-              ● {h.china.zhongqi}
-            </span>
-          ) : null}
-        </div>
-        <span className="mt-auto text-[13px] text-muted">{hijri}</span>
-        <span className="text-[13px] text-muted">{h.china ? h.china.label : ""}</span>
-      </div>
-    </td>
   );
 }

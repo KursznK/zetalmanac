@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Link from "next/link";
 import SiteHeader from "./site-header";
 import "./globals.css";
 
@@ -55,8 +56,21 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col bg-bg font-sans text-[17px] leading-relaxed text-ink">
         <SiteHeader />
         <div className="flex-1">{children}</div>
-        <footer className="mx-auto w-full max-w-5xl border-t border-rule px-6 py-8 text-sm text-muted">
-          Zetalmanac · proyek nonkomersial · kode sumber berlisensi MIT
+        <footer className="mx-auto w-full max-w-5xl px-6">
+          <div className="flex flex-wrap justify-between gap-x-6 gap-y-2 border-t border-rule pt-7 pb-8 text-sm text-muted">
+            <p>Zetalmanac · Proyek Non-komersial · Kode sumber berlisensi MIT</p>
+            <p className="flex flex-wrap gap-5">
+              <a className="tautan" href="https://github.com/KursznK/zetalmanac">
+                GitHub
+              </a>
+              <Link className="tautan" href="/validasi">
+                Status validasi
+              </Link>
+              <Link className="tautan" href="/tanya">
+                Tanya
+              </Link>
+            </p>
+          </div>
         </footer>
       </body>
     </html>
