@@ -57,7 +57,7 @@ export default function ValidasiPage() {
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-12 px-6 py-14">
       <div className="flex max-w-3xl flex-col gap-3">
-        <p className="font-caps tracking-[0.14em] text-accent">validasi</p>
+        <p className="font-caps tracking-[0.14em] text-accent">Validasi</p>
         <h1 className="font-display text-5xl leading-tight">Seberapa bisa dipercaya?</h1>
         <p className="text-lg text-muted">
           Setiap kalender diuji berlapis. Halaman ini menampilkan statusnya apa adanya, termasuk
@@ -71,10 +71,10 @@ export default function ValidasiPage() {
           <table className="w-full min-w-[720px] border-collapse text-left">
             <thead className="bg-chip font-caps tracking-[0.08em] text-muted">
               <tr>
-                <th scope="col" className="px-4 py-3 font-normal">kalender</th>
-                <th scope="col" className="px-4 py-3 font-normal">pembanding</th>
-                <th scope="col" className="px-4 py-3 font-normal">tes</th>
-                <th scope="col" className="px-4 py-3 font-normal">status</th>
+                <th scope="col" className="px-4 py-3 font-normal">Kalender</th>
+                <th scope="col" className="px-4 py-3 font-normal">Pembanding</th>
+                <th scope="col" className="px-4 py-3 font-normal">Tes</th>
+                <th scope="col" className="px-4 py-3 font-normal">Status</th>
               </tr>
             </thead>
             <tbody>

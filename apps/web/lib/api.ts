@@ -135,6 +135,12 @@ export async function hariPenting(
   return { ok: true, data: body as HariPenting[] };
 }
 
+// Rata Die -> tanggal Gregorian "TTTT-BB-HH", untuk tautan ke /konversi.
+// RD 719163 adalah 1 Januari 1970, titik nol waktu JavaScript.
+export function rdKeIso(rd: number): string {
+  return new Date((rd - 719163) * 86_400_000).toISOString().slice(0, 10);
+}
+
 export function hariIniDiJakarta(): string {
   // en-CA menghasilkan format TAHUN-BULAN-TANGGAL
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta" }).format(new Date());

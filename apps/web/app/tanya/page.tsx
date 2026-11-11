@@ -9,7 +9,7 @@ export default function TanyaPage() {
   return (
     <main className="mx-auto flex max-w-3xl flex-col gap-10 px-6 py-14">
       <div className="flex flex-col gap-3">
-        <p className="font-caps tracking-[0.14em] text-accent">tanya</p>
+        <p className="font-caps tracking-[0.14em] text-accent">Tanya</p>
         <h1 className="font-display text-5xl leading-tight">Tanya tentang kalender</h1>
         <p className="text-muted">
           Jawaban disusun oleh model AI hanya dari sumber Zetalmanac (spesifikasi kalender dan artikel Wikipedia

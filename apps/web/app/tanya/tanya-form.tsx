@@ -40,7 +40,7 @@ function DaftarSumber({ sumber }: { sumber: Sumber[] }) {
   if (sumber.length === 0) return null;
   return (
     <div className="flex flex-col gap-2 border-t border-rule pt-4">
-      <h3 className="font-caps text-sm tracking-[0.14em] text-muted">sumber</h3>
+      <h3 className="font-caps text-sm tracking-[0.14em] text-muted">Sumber</h3>
       <ol className="flex flex-col gap-3 text-sm">
         {sumber.map((s) => (
           <li key={s.nomor} id={`sumber-${s.nomor}`} className="flex flex-col gap-0.5">
